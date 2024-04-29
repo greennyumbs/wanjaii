@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "884134553754",
+    "project_id": "wanjaii",
+    "storage_bucket": "wanjaii.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:884134553754:android:dfa45d8a2aca2856ab9723",
+        "android_client_info": {
+          "package_name": "com.example.wanjaii"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD6ahbii6RzpCxT3iaLq9lqs7nMRa9s5Mk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:884134553754:android:4ec6845193b6ee42ab9723",
+        "android_client_info": {
+          "package_name": "com.google.firebase.presents.newwanjaii"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD6ahbii6RzpCxT3iaLq9lqs7nMRa9s5Mk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
