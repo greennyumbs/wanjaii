@@ -17,9 +17,9 @@ class _ForgetPasswordPageState extends State<ForgetPasswordPage> {
         context: context,
         builder: (context) {
           return AlertDialog(
-              title: const Text(
-                "ERROR",
-                style: TextStyle(
+              title: Text(
+                type,
+                style: const TextStyle(
                   fontSize: 20,
                   fontFamily: 'Sk-Modernist',
                   fontWeight: FontWeight.bold,
