@@ -1,5 +1,6 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dating_app/screens/onboarding/onboarding_screens/chat_main.dart';
 import 'package:flutter_dating_app/screens/onboarding/onboarding_screens/signin.dart';
 import 'package:flutter_dating_app/screens/onboarding/onboarding_screens/signup.dart';
 
@@ -114,6 +115,24 @@ class Create extends StatelessWidget {
                   },
                   child: const Text(
                     "Sign In",
+                    style: TextStyle(
+                      fontSize: 14,
+                      fontFamily: 'Sk-Modernist',
+                      fontWeight: FontWeight.w700,
+                      color: Color(0xFFBB254A),
+                    ),
+                  ),
+                ),
+                //BELL
+                TextButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => const ChatMain()),
+                    );
+                  },
+                  child: const Text(
+                    "Go To ChatMain",
                     style: TextStyle(
                       fontSize: 14,
                       fontFamily: 'Sk-Modernist',
