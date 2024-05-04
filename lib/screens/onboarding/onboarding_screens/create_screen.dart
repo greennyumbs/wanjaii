@@ -123,24 +123,24 @@ class Create extends StatelessWidget {
                     ),
                   ),
                 ),
-                //BELL
-                TextButton(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => const ChatMain()),
-                    );
-                  },
-                  child: const Text(
-                    "Go To ChatMain",
-                    style: TextStyle(
-                      fontSize: 14,
-                      fontFamily: 'Sk-Modernist',
-                      fontWeight: FontWeight.w700,
-                      color: Color(0xFFBB254A),
-                    ),
-                  ),
-                ),
+                // //BELL
+                // TextButton(
+                //   onPressed: () {
+                //     Navigator.push(
+                //       context,
+                //       MaterialPageRoute(builder: (context) => const ChatMain()),
+                //     );
+                //   },
+                //   child: const Text(
+                //     "Go To ChatMain",
+                //     style: TextStyle(
+                //       fontSize: 14,
+                //       fontFamily: 'Sk-Modernist',
+                //       fontWeight: FontWeight.w700,
+                //       color: Color(0xFFBB254A),
+                //     ),
+                //   ),
+                // ),
               ],
             ),
           ],

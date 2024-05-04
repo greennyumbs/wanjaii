@@ -1,4 +1,6 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dating_app/screens/onboarding/onboarding_screens/signin.dart';
 import 'package:flutter_dating_app/services/auth_service.dart';
 import 'package:flutter_dating_app/services/firebase_auth_service.dart';
 import 'package:flutter_dating_app/services/storage_service.dart';
@@ -46,7 +48,11 @@ class _UserScreenState extends State<UserScreen> {
           IconButton(
             icon: Icon(Icons.logout),
             onPressed: () async {
-              await AuthService().logout();
+              await FirebaseAuth.instance.signOut();
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const SignIn()),
+              );
               // Navigate to the login screen
             },
           ),
