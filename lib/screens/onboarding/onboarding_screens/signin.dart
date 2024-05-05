@@ -23,7 +23,9 @@ class _SignInState extends State<SignIn> {
         context: context,
         builder: (context) {
           return const Center(
-            child: CircularProgressIndicator(),
+            child: CircularProgressIndicator(
+              color: Color(0xFFBB254A),
+            ),
           );
         });
     void errorMessagePopup(String message) {

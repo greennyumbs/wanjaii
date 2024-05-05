@@ -52,6 +52,7 @@ dependencies:
   file_picker: ^8.0.2
   http: ^1.2.1
   toggle_switch: ^2.3.0
+  intl: ^0.19.0
 
 dev_dependencies:
   flutter_test:

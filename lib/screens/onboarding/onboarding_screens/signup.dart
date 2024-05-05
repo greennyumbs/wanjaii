@@ -22,7 +22,9 @@ class _SignUpState extends State<SignUp> {
         context: context,
         builder: (context) {
           return const Center(
-            child: CircularProgressIndicator(),
+            child: CircularProgressIndicator(
+              color: Color(0xFFBB254A),
+            ),
           );
         });
 

@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import "package:firebase_auth/firebase_auth.dart";
 import "package:flutter/material.dart";
 import 'package:flutter_dating_app/screens/home/home_no_bloc.dart';
@@ -44,6 +45,7 @@ class _UserVerificationState extends State<UserVerification> {
     await FirebaseAuth.instance.currentUser!.reload();
     setState(() {
       isEmailVerified = FirebaseAuth.instance.currentUser!.emailVerified;
+      // if (isEmailVerified) {}
     });
     // if (isEmailVerified) {
     //   timer?.cancel();
