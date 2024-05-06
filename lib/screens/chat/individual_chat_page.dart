@@ -29,6 +29,7 @@ class _IndividualChatPageState extends State<IndividualChatPage> {
   @override
   void initState() {
     super.initState();
+    fetchImagePath();
     myFocusNode.addListener(() {
       if (myFocusNode.hasFocus) {
         Future.delayed(const Duration(milliseconds: 500), () => scrollDown());
@@ -61,26 +62,54 @@ class _IndividualChatPageState extends State<IndividualChatPage> {
     }
   }
 
+  final currentUser = FirebaseAuth.instance.currentUser!.uid;
+
+  String imagePath = "";
+  fetchImagePath() async {
+    QuerySnapshot imagePathQuery = await FirebaseFirestore.instance
+        .collection("users")
+        .where("uid", isEqualTo: widget.receiverId)
+        .get();
+    // print("this is query");
+    // print(imagePathQuery.docs[0]["imageUrls"]);
+    setState(() {
+      imagePath = imagePathQuery.docs[0]["imageUrls"];
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: Text(
-            widget.receiverEmail,
-            style: const TextStyle(
-                color: Color(
-                    0xFFBB254A)), // Assuming you want the text color to be 0xFFBB254A
-          ),
-          centerTitle: true,
-          backgroundColor: const Color(0xFFFFFFFF),
-          leading: const BackButton(color: Color(0xFFBB254A)),
-        ),
-        body: Column(
+      appBar: AppBar(
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            Expanded(child: _buildMessageList()),
-            _buildUserInput(),
+            CircleAvatar(
+              radius: 20.0,
+              backgroundImage: NetworkImage(imagePath),
+            ),
+            const SizedBox(
+              width: 10,
+            ),
+            Text(
+              widget.receiverEmail,
+              style: const TextStyle(
+                color: Color(0xFFBB254A),
+              ),
+            ),
           ],
-        ));
+        ),
+        centerTitle: true,
+        backgroundColor: const Color(0xFFFFFFFF),
+        leading: const BackButton(color: Color(0xFFBB254A)),
+      ),
+      body: Column(
+        children: [
+          Expanded(child: _buildMessageList()),
+          _buildUserInput(),
+        ],
+      ),
+    );
   }
 
   Widget _buildMessageList() {
