@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:insta_image_viewer/insta_image_viewer.dart';
 
 class ChatBubbles extends StatelessWidget {
   final Timestamp timestamp;
@@ -51,6 +52,8 @@ class ChatBubbles extends StatelessWidget {
       return Column(
         children: [
           Container(
+            height: 200,
+            width: 200,
             decoration: BoxDecoration(
               color: isCurrentUser
                   ? const Color(0xFFF3F3F3)
@@ -64,21 +67,11 @@ class ChatBubbles extends StatelessWidget {
             ),
             padding: const EdgeInsets.all(16),
             margin: const EdgeInsets.symmetric(vertical: 2.5, horizontal: 25),
-            child: LayoutBuilder(
-              builder: (context, constraints) {
-                return SizedBox(
-                  width: 200,
-                  height: 200, // Set height to match width
-                  child: AspectRatio(
-                    aspectRatio: 1, // Maintain aspect ratio of 1:1
-                    child: Image(
-                      image: NetworkImage(imageUrls),
-                      fit: BoxFit
-                          .cover, // Adjust the fit as per your requirement
-                    ),
-                  ),
-                );
-              },
+            child: InstaImageViewer(
+              child: Image(
+                image: NetworkImage(imageUrls),
+                // Adjust the fit as per your requirement
+              ),
             ),
           ),
         ],
