@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_dating_app/models/user_model.dart';
+import 'package:flutter_dating_app/screens/chat/individual_chat_page.dart';
 
 class MatchScreen extends StatelessWidget {
   final User currentUser;
@@ -170,7 +171,17 @@ class MatchScreen extends StatelessWidget {
               ),
               const SizedBox(height: 80.0),
               ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => IndividualChatPage(
+                          receiverEmail: matchedUser.email,
+                          receiverId: matchedUser.uid ?? '',
+                        ),
+                      ),
+                    );
+                  },
                   style: ButtonStyle(
                     backgroundColor: MaterialStateProperty.all<Color>(
                         const Color(0xFFBB254A)), // Change button color
