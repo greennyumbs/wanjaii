@@ -9,6 +9,8 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_dating_app/screens/home/home_no_bloc.dart';
 
 import 'package:flutter_dating_app/screens/onboarding/widgets/custom_image_container.dart';
+import 'package:flutter_dating_app/services/storage_service.dart';
+import 'package:flutter_dating_app/services/user_service.dart';
 import 'package:image_picker/image_picker.dart';
 
 class ProfileSetupScreen extends StatefulWidget {
@@ -27,7 +29,13 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
   String _lastName = '';
   DateTime _selectedDate = DateTime.now();
   String? dropdownValue;
-  File? _imageFile;
+  late String? _imageUrls;
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchUserData();
+  }
 
   // Function to show the date picker modal
   Future<void> _selectDate(BuildContext context) async {
@@ -43,40 +51,62 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
       });
   }
 
-  Future<void> _pickImage() async {
+  Future<String?> pickImage() async {
     final imagePicker = ImagePicker();
     final pickedFile = await imagePicker.pickImage(source: ImageSource.gallery);
-    setState(() {
-      if (pickedFile != null) {
-        _imageFile = File(pickedFile.path);
-      }
-    });
+
+    if (pickedFile == null) {
+      return null;
+    }
+
+    return pickedFile.path;
   }
 
   String get fullName => '$_firstName $_lastName';
   int get age => DateTime.now().year - _selectedDate.year;
 
-  Future<void> _uploadData() async {
-    if (_imageFile == null || _firstName.isEmpty || _lastName.isEmpty) {
+  Future<void> _uploadData(String imagePath) async {
+    final file = File(imagePath);
+    if (imagePath == null || _firstName.isEmpty || _lastName.isEmpty) {
       return; // Show error message if data is missing
     }
 
-    final storageRef =
-        FirebaseStorage.instance.ref().child('user_images/$_imageFile!.path');
-    await storageRef.putFile(_imageFile!);
-    final imageUrls = await storageRef.getDownloadURL();
+    final ref = FirebaseStorage.instance
+        .ref()
+        .child('user_images/${DateTime.now().millisecondsSinceEpoch}.jpg');
+    final uploadTask = ref.putFile(file);
+    final snapshot = await uploadTask.whenComplete(() {});
+    final imageUrls = await snapshot.ref.getDownloadURL();
 
+    final user = FirebaseAuth.instance.currentUser;
+    final userData = {
+      'imageUrls': imageUrls,
+    };
+    await FirebaseFirestore.instance
+        .collection('users')
+        .doc(user?.uid)
+        .update(userData);
+  }
+
+  Future<void> _fetchUserData() async {
+    final userData = await UserService().getUserData();
+    //_bioController.text = userData.bio;
+    _imageUrls = userData.imageUrls;
+    setState(() {});
+  }
+
+  void _handleUpload() async {
     final user = FirebaseAuth.instance.currentUser;
     final userData = {
       'name': fullName,
       'age': age,
-      'imageUrls': imageUrls,
       'email': user?.email,
     };
     await FirebaseFirestore.instance
         .collection('users')
         .doc(user?.uid)
         .update(userData);
+
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(builder: (context) => HomeScreen()),
@@ -149,9 +179,55 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  CustomImageContainer(
-                    imageUrls: _imageFile?.path,
-                    onPickImage: _pickImage,
+                  Center(
+                    child: Container(
+                      height: 110,
+                      width: 110,
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(120),
+                          color: Colors.transparent,
+                          border: Border.all(width: 2, color: Colors.white),
+                          image: _imageUrls != null
+                              ? DecorationImage(
+                                  image: NetworkImage(_imageUrls!),
+                                  fit: BoxFit.cover,
+                                )
+                              : DecorationImage(
+                                  image: AssetImage(
+                                          'assets/images/profile_placeholder.png')
+                                      as ImageProvider,
+                                )),
+                      child: _imageUrls == null
+                          ? Align(
+                              alignment: Alignment.bottomRight,
+                              child: Container(
+                                height: 39,
+                                width: 39,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(30),
+                                  color: Color(0xFFBB254A),
+                                ),
+                                child: IconButton(
+                                  icon: const Icon(Icons.photo_camera),
+                                  color: Colors.white,
+                                  onPressed: () async {
+                                    // Update user profile image
+                                    final imagePath =
+                                        await StorageService().pickImage();
+                                    if (imagePath != null) {
+                                      final imageUrls = await StorageService()
+                                          .uploadImage(imagePath);
+                                      await UserService().updateUserImage(
+                                          imageUrls: imageUrls);
+                                      _imageUrls = imageUrls;
+                                      setState(() {});
+                                    }
+                                  },
+                                ),
+                              ),
+                            )
+                          : null,
+                    ),
                   ),
 
                   SizedBox(height: 60.0),
@@ -271,7 +347,7 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
               ),
               SizedBox(height: 110.0),
               ElevatedButton(
-                  onPressed: _uploadData,
+                  onPressed: _handleUpload,
                   style: ButtonStyle(
                     backgroundColor: MaterialStateProperty.all<Color>(
                         const Color(0xFFBB254A)), // Change button color

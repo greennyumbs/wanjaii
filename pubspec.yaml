@@ -52,6 +52,8 @@ dependencies:
   file_picker: ^8.0.2
   http: ^1.2.1
   toggle_switch: ^2.3.0
+  readmore: ^3.0.0
+  google_maps_flutter: ^2.6.1
 
 dev_dependencies:
   flutter_test:
@@ -85,6 +87,7 @@ flutter:
   - assets/images/girl1.png
   - assets/images/girl2.png
   - assets/images/girl3.png
+  - assets/images/girl4.jpg
   - assets/images/profile_placeholder.png
 
   fonts:

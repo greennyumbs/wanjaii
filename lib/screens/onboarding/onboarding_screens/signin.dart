@@ -18,7 +18,9 @@ class _SignInState extends State<SignIn> {
         context: context,
         builder: (context) {
           return const Center(
-            child: CircularProgressIndicator(),
+            child: CircularProgressIndicator(
+              color: Color(0xFFBB254A),
+            ),
           );
         });
     void errorMessagePopup(String message) {
@@ -89,96 +91,101 @@ class _SignInState extends State<SignIn> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          const Image(image: AssetImage('assets/images/logo.png')),
-          const SizedBox(height: 20),
-          const Text(
-            "Welcome back!",
-            style: TextStyle(
-              fontSize: 24,
-              fontFamily: 'Sk-Modernist',
-              fontWeight: FontWeight.bold,
-              color: Color(0xFF000000),
-            ),
-          ),
-          const SizedBox(height: 10),
-          const Text(
-            "Enter your Email and Password",
-            style: TextStyle(
-              fontSize: 14,
-              fontFamily: 'Sk-Modernist',
-              color: Color(0xFF6C6C6C),
-            ),
-          ),
-          const SizedBox(height: 50),
-          SizedBox(
-            width: 295,
-            height: 56,
-            child: TextField(
-              controller: emailValue,
-              decoration: InputDecoration(
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(15.0),
-                  ),
-                  hintText: "Enter Email",
-                  hintStyle: const TextStyle(
-                    fontSize: 16,
-                    fontFamily: 'Sk-Modernist',
-                    color: Color(0xFFB3B3B3),
-                  ),
-                  contentPadding: const EdgeInsets.all(20.0)),
-            ),
-          ),
-          const SizedBox(height: 15),
-          SizedBox(
-            width: 295,
-            height: 56,
-            child: TextField(
-              obscureText: true,
-              controller: passwordValue,
-              decoration: InputDecoration(
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(15.0),
-                  ),
-                  hintText: "Password",
-                  hintStyle: const TextStyle(
-                    fontSize: 16,
-                    fontFamily: 'Sk-Modernist',
-                    color: Color(0xFFB3B3B3),
-                  ),
-                  contentPadding: const EdgeInsets.all(20.0)),
-            ),
-          ),
-          const SizedBox(height: 100),
-          ElevatedButton(
-              onPressed: () {
-                signUserIn();
-              },
-              style: ButtonStyle(
-                backgroundColor: MaterialStateProperty.all<Color>(
-                    const Color(0xFFBB254A)), // Change button color
-                minimumSize: MaterialStateProperty.all<Size>(
-                    const Size(295, 56)), // Set button width and height
-                shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                  RoundedRectangleBorder(
-                    borderRadius:
-                        BorderRadius.circular(15.0), // Set border radius here
-                  ),
+        body: SingleChildScrollView(
+      child: Padding(
+        padding: const EdgeInsets.only(top: 100.0),
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Image(image: AssetImage('assets/images/logo.png')),
+              const SizedBox(height: 20),
+              const Text(
+                "Welcome back!",
+                style: TextStyle(
+                  fontSize: 24,
+                  fontFamily: 'Sk-Modernist',
+                  fontWeight: FontWeight.bold,
+                  color: Color(0xFF000000),
                 ),
               ),
-              child: const Text(
-                'Sign In',
+              const SizedBox(height: 10),
+              const Text(
+                "Enter your Email and Password",
                 style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
+                  fontSize: 14,
                   fontFamily: 'Sk-Modernist',
-                  color: Color(0xFFFFFFFF),
+                  color: Color(0xFF6C6C6C),
                 ),
-              ))
-        ],
+              ),
+              const SizedBox(height: 50),
+              SizedBox(
+                width: 295,
+                height: 56,
+                child: TextField(
+                  controller: emailValue,
+                  decoration: InputDecoration(
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(15.0),
+                      ),
+                      hintText: "Enter Email",
+                      hintStyle: const TextStyle(
+                        fontSize: 16,
+                        fontFamily: 'Sk-Modernist',
+                        color: Color(0xFFB3B3B3),
+                      ),
+                      contentPadding: const EdgeInsets.all(20.0)),
+                ),
+              ),
+              const SizedBox(height: 15),
+              SizedBox(
+                width: 295,
+                height: 56,
+                child: TextField(
+                  obscureText: true,
+                  controller: passwordValue,
+                  decoration: InputDecoration(
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(15.0),
+                      ),
+                      hintText: "Password",
+                      hintStyle: const TextStyle(
+                        fontSize: 16,
+                        fontFamily: 'Sk-Modernist',
+                        color: Color(0xFFB3B3B3),
+                      ),
+                      contentPadding: const EdgeInsets.all(20.0)),
+                ),
+              ),
+              const SizedBox(height: 180),
+              ElevatedButton(
+                  onPressed: () {
+                    signUserIn();
+                  },
+                  style: ButtonStyle(
+                    backgroundColor: MaterialStateProperty.all<Color>(
+                        const Color(0xFFBB254A)), // Change button color
+                    minimumSize: MaterialStateProperty.all<Size>(
+                        const Size(295, 56)), // Set button width and height
+                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                      RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(
+                            15.0), // Set border radius here
+                      ),
+                    ),
+                  ),
+                  child: const Text(
+                    'Sign In',
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      fontFamily: 'Sk-Modernist',
+                      color: Color(0xFFFFFFFF),
+                    ),
+                  ))
+            ],
+          ),
+        ),
       ),
     ));
   }

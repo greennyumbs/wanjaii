@@ -21,7 +21,7 @@ class UserScreen extends StatefulWidget {
 }
 
 class _UserScreenState extends State<UserScreen> {
-  final _bioController = TextEditingController();
+  //final _bioController = TextEditingController();
   String? _imageUrls;
 
   @override
@@ -32,7 +32,7 @@ class _UserScreenState extends State<UserScreen> {
 
   Future<void> _fetchUserData() async {
     final userData = await UserService().getUserData();
-    _bioController.text = userData.bio;
+    //_bioController.text = userData.bio;
     _imageUrls = userData.imageUrls;
     setState(() {});
   }
@@ -64,7 +64,7 @@ class _UserScreenState extends State<UserScreen> {
                   : AssetImage('assets/images/profile_placeholder.png')
                       as ImageProvider,
             ),
-            SizedBox(height: 16.0),
+            /*  SizedBox(height: 16.0),
             TextFormField(
               controller: _bioController,
               decoration: InputDecoration(labelText: 'Bio'),
@@ -76,7 +76,7 @@ class _UserScreenState extends State<UserScreen> {
                 await UserService().updateUserBio(bio: _bioController.text);
               },
               child: Text('Update Bio'),
-            ),
+            ), */
             ElevatedButton(
               onPressed: () async {
                 // Update user profile image

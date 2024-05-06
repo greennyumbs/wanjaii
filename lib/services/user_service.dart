@@ -5,6 +5,7 @@ import 'package:flutter_dating_app/models/user.dart';
 class UserService {
   final _firestore = FirebaseFirestore.instance;
 
+//use this
   Future<User> getUserData() async {
     final currentUser = FirebaseAuth.instance.currentUser;
     if (currentUser == null) {
@@ -29,6 +30,7 @@ class UserService {
         .update({'bio': bio});
   }
 
+//use this
   Future<void> updateUserImage({required String imageUrls}) async {
     final currentUser = FirebaseAuth.instance.currentUser;
     if (currentUser == null) {

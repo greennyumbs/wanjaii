@@ -9,9 +9,12 @@ class User extends Equatable {
   final String imageUrls;
   final String bio;
   final String jobTitle;
-  final List<String> interest;
-  final String location;
-  final List<String> likedUserIds;
+  final List<String> interests;
+  final String city;
+  final String country;
+  final String state;
+  final String profileAbout;
+  final List<String> likedUsers;
 
   const User({
     required this.uid,
@@ -21,21 +24,29 @@ class User extends Equatable {
     required this.imageUrls,
     required this.bio,
     required this.jobTitle,
-    required this.interest,
-    required this.location,
-    this.likedUserIds = const [],
+    required this.interests,
+    required this.city,
+    required this.country,
+    required this.state,
+    required this.profileAbout,
+    this.likedUsers = const [],
   });
 
   Map<String, dynamic> toMap() {
     return {
+      "uid": uid,
       "name": name,
       "age": age,
       "gender": gender,
       "imageUrls": imageUrls,
-      "location": location,
+      "city": city,
+      "country": country,
+      "state": state,
+      "profileAbout": profileAbout,
       "bio": bio,
       "jobTitle": jobTitle,
-      "interest": interest,
+      "interests": interests,
+      "likedUsers": likedUsers,
     };
   }
 
@@ -47,9 +58,12 @@ class User extends Equatable {
     String? imageUrls,
     String? bio,
     String? jobTitle,
-    List<String>? interest,
-    String? location,
-    List<String>? likedUserIds,
+    List<String>? interests,
+    String? city,
+    String? country,
+    String? state,
+    String? profileAbout,
+    List<String>? likedUsers,
   }) {
     return User(
       uid: uid ?? this.uid,
@@ -59,35 +73,30 @@ class User extends Equatable {
       imageUrls: imageUrls ?? this.imageUrls,
       bio: bio ?? this.bio,
       jobTitle: jobTitle ?? this.jobTitle,
-      interest: interest ?? this.interest,
-      location: location ?? this.location,
-      likedUserIds: likedUserIds ?? this.likedUserIds,
+      interests: interests ?? this.interests,
+      city: city ?? this.city,
+      country: country ?? this.country,
+      state: state ?? this.state,
+      profileAbout: profileAbout ?? this.profileAbout,
+      likedUsers: likedUsers ?? this.likedUsers,
     );
   }
 
   factory User.fromFirestore(Map<String, dynamic> data) {
-    final uid = data['uid'] as String?;
-    final name = data['name'] as String?;
-    final age = data['age'] as int?;
-    final gender = data['gender'] as String?;
-    final imageUrls = data['imageUrls'] as String?;
-    final bio = data['bio'] as String?;
-    final jobTitle = data['jobTitle'] as String?;
-    final interest = (data['interest'] as List?)?.cast<String>();
-    final location = data['location'] as String?;
-    final likedUserIds = (data['likedUserIds'] as List?)?.cast<String>();
-
     return User(
-      uid: uid,
-      name: name ?? '',
-      age: age ?? 0,
-      gender: gender ?? '',
-      imageUrls: imageUrls ?? '',
-      bio: bio ?? '',
-      jobTitle: jobTitle ?? '',
-      interest: interest ?? [],
-      location: location ?? '',
-      likedUserIds: likedUserIds ?? [],
+      uid: data['uid'] ?? '',
+      name: data['name'] ?? '',
+      age: data['age'] ?? 0,
+      gender: data['gender'] ?? '',
+      imageUrls: data['imageUrls'] ?? '',
+      bio: data['bio'] ?? '',
+      jobTitle: data['jobTitle'] ?? '',
+      interests: List<String>.from(data['interests'] ?? []),
+      city: data['city'] ?? '',
+      country: data['country'] ?? '',
+      state: data['state'] ?? '',
+      profileAbout: data['profileAbout'] ?? '',
+      likedUsers: List<String>.from(data['likedUsers'] ?? []),
     );
   }
 
@@ -98,24 +107,50 @@ class User extends Equatable {
         age,
         imageUrls,
         gender,
-        location,
+        city,
+        country,
+        state,
+        profileAbout,
         bio,
         jobTitle,
-        interest,
-        likedUserIds,
+        interests,
+        likedUsers,
       ];
 
   static User fromSnapshot(DocumentSnapshot snap) {
     User users = User(
-        uid: snap['uid'],
-        name: snap['name'],
-        age: snap['age'],
-        imageUrls: snap['imageUrls'],
-        gender: snap['gender'],
-        bio: snap['bio'],
-        jobTitle: snap['jobTitle'],
-        interest: snap['interest'],
-        location: 'location');
+      uid: snap['uid'],
+      name: snap['name'],
+      age: snap['age'],
+      imageUrls: snap['imageUrls'],
+      gender: snap['gender'],
+      bio: snap['bio'],
+      jobTitle: snap['jobTitle'],
+      likedUsers: snap['likedUsers'],
+      interests: snap['interests'],
+      city: snap['city'],
+      country: snap['country'],
+      state: snap['state'],
+      profileAbout: snap['profileAbout'],
+    );
     return users;
+  }
+
+  factory User.fromJson(Map<String, dynamic> json) {
+    return User(
+      uid: json['uid'] ?? '',
+      name: json['name'] ?? '',
+      age: json['age'] ?? 0,
+      gender: json['gender'] ?? '',
+      imageUrls: json['imageUrls'] ?? '',
+      bio: json['bio'] ?? '',
+      jobTitle: json['jobTitle'] ?? '',
+      interests: List<String>.from(json['interests'] ?? []),
+      city: json['city'] ?? '',
+      country: json['country'] ?? '',
+      state: json['state'] ?? '',
+      profileAbout: json['profileAbout'] ?? '',
+      likedUsers: List<String>.from(json['likedUsers'] ?? []),
+    );
   }
 }

@@ -17,9 +17,12 @@ class StartOnboarding extends OnboardingEvent {
       gender: '',
       imageUrls: '',
       jobTitle: '',
-      interest: [],
+      interests: [],
       bio: '',
-      location: '',
+      city: '',
+      country: '',
+      state: '',
+      profileAbout: '',
     ),
   });
 

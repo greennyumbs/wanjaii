@@ -6,12 +6,14 @@ class MatchScreen extends StatelessWidget {
   final User currentUser;
   final User matchedUser;
   final List<User> swipedUsers;
+  final Function(List<User>) onKeepSwiping;
 
   const MatchScreen({
     Key? key,
     required this.currentUser,
     required this.matchedUser,
     required this.swipedUsers,
+    required this.onKeepSwiping,
   }) : super(key: key);
 
   @override
@@ -193,7 +195,8 @@ class MatchScreen extends StatelessWidget {
               const SizedBox(height: 20.0),
               ElevatedButton(
                   onPressed: () {
-                    Navigator.of(context).pop(swipedUsers);
+                    Navigator.of(context).pop(matchedUser);
+                    onKeepSwiping(swipedUsers);
                   },
                   style: ButtonStyle(
                     backgroundColor: MaterialStateProperty.all<Color>(
