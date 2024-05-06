@@ -329,7 +329,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 }
                               },
                               onDragEnd: (drag) {
-                                if (drag.velocity.pixelsPerSecond.dx < 0) {
+                                if (drag.offset.dx < 0) {
                                   _swipeLeft();
                                 } else {
                                   _swipeRight();
@@ -376,7 +376,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                 color: Colors.white,
                                               ),
                                               child: Icon(
-                                                Icons.favorite,
+                                                Icons.clear,
                                                 size: 60,
                                                 color: Color(0xFFBB254A),
                                               ),
