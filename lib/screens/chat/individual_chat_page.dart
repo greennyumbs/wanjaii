@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_dating_app/screens/chat/chat_screen.dart';
 import 'package:flutter_dating_app/services/chat_service.dart';
 import 'package:flutter_dating_app/services/storage_service.dart';
 import 'package:intl/intl.dart';
@@ -90,6 +91,7 @@ class _IndividualChatPageState extends State<IndividualChatPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        toolbarHeight: 100,
         title: Row(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
@@ -110,7 +112,25 @@ class _IndividualChatPageState extends State<IndividualChatPage> {
         ),
         centerTitle: true,
         backgroundColor: const Color(0xFFFFFFFF),
-        leading: const BackButton(color: Color(0xFFBB254A)),
+        leading: Padding(
+          padding: const EdgeInsets.only(left: 20.0),
+          child: IconButton(
+            icon: Icon(
+              Icons.arrow_back,
+              color: Color(0xFFBB254A),
+              size: 30,
+            ),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => const ChatScreen(
+                          chatId: '',
+                        )),
+              ); // Navigate back to chat screen
+            },
+          ),
+        ),
       ),
       body: Column(
         children: [
