@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_dating_app/services/storage_service.dart';
 import 'package:intl/intl.dart';
 // import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -62,18 +63,29 @@ class _IndividualChatPageState extends State<IndividualChatPage> {
     }
   }
 
+  void sendImage() async {
+    final imagePath = await StorageService().pickImage();
+    if (imagePath != null) {
+      final imageUrls = await StorageService().uploadImage(imagePath);
+      await _chatService.sendImage(widget.receiverId, imageUrls);
+      scrollDown();
+    }
+  }
+
   final currentUser = FirebaseAuth.instance.currentUser!.uid;
 
-  String imagePath = "";
+  String imageProfilePath = "";
+  String name = "";
   fetchImagePath() async {
-    QuerySnapshot imagePathQuery = await FirebaseFirestore.instance
+    QuerySnapshot imageProfilePathQuery = await FirebaseFirestore.instance
         .collection("users")
         .where("uid", isEqualTo: widget.receiverId)
         .get();
     // print("this is query");
-    // print(imagePathQuery.docs[0]["imageUrls"]);
+    // print(imageProfilePathQuery.docs[0]["imageUrls"]);
     setState(() {
-      imagePath = imagePathQuery.docs[0]["imageUrls"];
+      imageProfilePath = imageProfilePathQuery.docs[0]["imageUrls"];
+      name = imageProfilePathQuery.docs[0]["name"];
     });
   }
 
@@ -86,13 +98,13 @@ class _IndividualChatPageState extends State<IndividualChatPage> {
           children: [
             CircleAvatar(
               radius: 20.0,
-              backgroundImage: NetworkImage(imagePath),
+              backgroundImage: NetworkImage(imageProfilePath),
             ),
             const SizedBox(
               width: 10,
             ),
             Text(
-              widget.receiverEmail,
+              name,
               style: const TextStyle(
                 color: Color(0xFFBB254A),
               ),
@@ -154,9 +166,12 @@ class _IndividualChatPageState extends State<IndividualChatPage> {
             isCurrentUser ? CrossAxisAlignment.end : CrossAxisAlignment.start,
         children: [
           ChatBubbles(
-              message: data["message"],
-              isCurrentUser: isCurrentUser,
-              timestamp: data["timestamp"]),
+            message: data["message"],
+            isCurrentUser: isCurrentUser,
+            timestamp: data["timestamp"],
+            type: data["type"],
+            imageUrls: data["imageUrls"],
+          ),
           Container(
             // padding: const EdgeInsets.all(16),
             margin: const EdgeInsets.symmetric(vertical: 2.5, horizontal: 25),
@@ -183,6 +198,11 @@ class _IndividualChatPageState extends State<IndividualChatPage> {
         height: 80,
         child: Row(
           children: [
+            IconButton(
+              onPressed: () =>
+                  {sendImage()}, // Arrow function for sequential execution
+              icon: const Icon(Icons.photo, color: Color(0xFFBB254A)),
+            ),
             Expanded(
               child: TextField(
                 controller: messageController,
