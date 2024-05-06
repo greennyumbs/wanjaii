@@ -33,6 +33,8 @@ class _SignUpState extends State<SignUp> {
       if (passwordValue.text == confirmPasswordValue.text) {
         await FirebaseAuth.instance.createUserWithEmailAndPassword(
             email: emailValue.text.trim(), password: passwordValue.text.trim());
+        _storeEmailInFirestore(emailValue.text.trim());
+
         Navigator.pop(context);
 
         await sendEmailVerification();
@@ -282,5 +284,15 @@ class _SignUpState extends State<SignUp> {
         )),
       ),
     ));
+  }
+}
+
+Future<void> _storeEmailInFirestore(String email) async {
+  final user = FirebaseAuth.instance.currentUser;
+  if (user != null) {
+    await FirebaseFirestore.instance.collection('users').doc(user.uid).set({
+      'email': email,
+      'uid': "" // Include email in the Firestore document
+    });
   }
 }

@@ -220,12 +220,3 @@ class _SignInState extends State<SignIn> {
     ));
   }
 }
-
-Future<void> _storeEmailInFirestore(String email) async {
-  final user = FirebaseAuth.instance.currentUser;
-  if (user != null) {
-    await FirebaseFirestore.instance.collection('users').doc(user.uid).set({
-      'email': email, // Include email in the Firestore document
-    });
-  }
-}
