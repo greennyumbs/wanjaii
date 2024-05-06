@@ -76,6 +76,7 @@ class _IndividualChatPageState extends State<IndividualChatPage> {
 
   String imageProfilePath = "";
   String name = "";
+
   fetchImagePath() async {
     QuerySnapshot imageProfilePathQuery = await FirebaseFirestore.instance
         .collection("users")
