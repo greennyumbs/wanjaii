@@ -1,6 +1,12 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_dating_app/screens/home/home_no_bloc.dart';
+import 'package:flutter/widgets.dart';
+import 'package:flutter_dating_app/screens/onboarding/onboarding_screens/forget_password.dart';
+// import 'package:newwanjaii/homepage.dart';
+// import '../../onboarding/onbroading_screen.dart';
+// import 'package:newwanjaii/user_verification.dart';
+import '../../onboarding/onboarding_screens/verification.dart';
 
 class SignIn extends StatefulWidget {
   const SignIn({super.key});
@@ -18,7 +24,9 @@ class _SignInState extends State<SignIn> {
         context: context,
         builder: (context) {
           return const Center(
-            child: CircularProgressIndicator(),
+            child: CircularProgressIndicator(
+              color: Color(0xFFBB254A),
+            ),
           );
         });
     void errorMessagePopup(String message) {
@@ -64,16 +72,12 @@ class _SignInState extends State<SignIn> {
     }
 
     try {
-      final UserCredential userCredential = await FirebaseAuth.instance
-          .signInWithEmailAndPassword(
-              email: emailValue.text.trim(),
-              password: passwordValue.text.trim());
-
-      final loggedInUser = userCredential.user;
+      await FirebaseAuth.instance.signInWithEmailAndPassword(
+          email: emailValue.text.trim(), password: passwordValue.text.trim());
       Navigator.pop(context);
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => HomeScreen()),
+        MaterialPageRoute(builder: (context) => const UserVerification()),
       );
     } on FirebaseAuthException catch (e) {
       Navigator.pop(context);
@@ -93,7 +97,11 @@ class _SignInState extends State<SignIn> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          const Image(image: AssetImage('assets/images/logo.png')),
+          const Image(
+            image: AssetImage('assets/images/logo.png'),
+            width: 200.0, // Adjust width as needed (in pixels)
+            height: 100.0, // Adjust height as needed (in pixels)
+          ),
           const SizedBox(height: 20),
           const Text(
             "Welcome back!",
@@ -152,7 +160,36 @@ class _SignInState extends State<SignIn> {
                   contentPadding: const EdgeInsets.all(20.0)),
             ),
           ),
-          const SizedBox(height: 100),
+          const SizedBox(
+            height: 10.0,
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 80.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const ForgetPasswordPage()),
+                    );
+                  },
+                  child: const Text(
+                    "Forgot Password?",
+                    style: TextStyle(
+                      fontSize: 14,
+                      fontFamily: 'Sk-Modernist',
+                      fontWeight: FontWeight.w700,
+                      color: Color(0xFFBB254A),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(height: 30),
           ElevatedButton(
               onPressed: () {
                 signUserIn();
@@ -181,5 +218,14 @@ class _SignInState extends State<SignIn> {
         ],
       ),
     ));
+  }
+}
+
+Future<void> _storeEmailInFirestore(String email) async {
+  final user = FirebaseAuth.instance.currentUser;
+  if (user != null) {
+    await FirebaseFirestore.instance.collection('users').doc(user.uid).set({
+      'email': email, // Include email in the Firestore document
+    });
   }
 }

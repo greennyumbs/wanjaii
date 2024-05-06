@@ -235,6 +235,7 @@ Future<void> _storeGenderInFirestore(bool isWoman) async {
   if (user != null) {
     await FirebaseFirestore.instance.collection('users').doc(user.uid).set({
       'gender': isWoman ? 'woman' : 'man',
+      'likedUsers': [],
       'uid': user.uid,
     });
   }

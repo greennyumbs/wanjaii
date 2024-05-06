@@ -82,7 +82,7 @@ class UserCard extends StatelessWidget {
                           height: 1.3)),
                 ],
               ),
-            )
+            ),
           ],
         ),
       ),

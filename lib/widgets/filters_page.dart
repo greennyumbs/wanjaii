@@ -3,6 +3,21 @@ import 'package:flutter_dating_app/screens/home/home_no_bloc.dart';
 import 'package:toggle_switch/toggle_switch.dart';
 
 class FiltersScreen extends StatefulWidget {
+  final Function(String, String, int, int) onApplyFilters;
+
+  final String lastSelectedGender;
+  final String? lastSelectedLocation;
+  final int lastSelectedMinAge;
+  final int lastSelectedMaxAge;
+
+  const FiltersScreen({
+    Key? key,
+    required this.onApplyFilters,
+    required this.lastSelectedGender,
+    required this.lastSelectedLocation,
+    required this.lastSelectedMinAge,
+    required this.lastSelectedMaxAge,
+  }) : super(key: key);
   @override
   _FiltersScreenState createState() => _FiltersScreenState();
 }
@@ -12,6 +27,43 @@ class _FiltersScreenState extends State<FiltersScreen> {
   int _minAge = 18;
   int _maxAge = 50;
   String? _selectedLocation;
+  late String _selectedGender;
+
+  String _mapGenderToFirestoreValue(int selectedIndex) {
+    switch (selectedIndex) {
+      case 0:
+        return 'woman';
+      case 1:
+        return 'man';
+      case 2:
+        return ''; // Return an empty string for 'Both'
+      default:
+        return ''; // Return an empty string if the index is invalid
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _selectedGender = widget.lastSelectedGender;
+    _selectedLocation = null;
+    _minAge = widget.lastSelectedMinAge;
+    _maxAge = widget.lastSelectedMaxAge;
+
+    _selectedIndex = _mapGenderToToggleIndex(_selectedGender);
+  }
+
+  // Helper method to map gender to ToggleSwitch index
+  int _mapGenderToToggleIndex(String gender) {
+    switch (gender) {
+      case 'man':
+        return 1;
+      case 'woman':
+        return 0;
+      default:
+        return 2; // Both
+    }
+  }
 
   void _filter() {
     setState(() {
@@ -19,12 +71,24 @@ class _FiltersScreenState extends State<FiltersScreen> {
       _minAge = 18;
       _maxAge = 50;
       _selectedLocation = null;
+      _selectedGender = 'All';
     });
+
+    Navigator.pop(context);
   }
 
   void _confirm() {
+    String firestoreGenderValue = _mapGenderToFirestoreValue(_selectedIndex);
+    widget.onApplyFilters(
+        firestoreGenderValue, _selectedLocation ?? '', _minAge, _maxAge);
     Navigator.pop(context);
   }
+
+  /* void _confirm() {
+    widget.onApplyFilters(
+        _selectedGender, _selectedLocation ?? '', _minAge, _maxAge);
+    Navigator.pop(context);
+  } */
 
   @override
   Widget build(BuildContext context) {
@@ -104,8 +168,12 @@ class _FiltersScreenState extends State<FiltersScreen> {
                       border: InputBorder.none,
                       contentPadding: EdgeInsets.symmetric(horizontal: 16.0),
                     ),
-                    items:
-                        ['Bangkok', 'Pattaya', 'Ayutthaya'].map((String value) {
+                    items: [
+                      'select a location',
+                      'Bangkok',
+                      'Pattaya',
+                      'Ayutthaya'
+                    ].map((String value) {
                       return DropdownMenuItem<String>(
                         value: value,
                         child: Text(value),

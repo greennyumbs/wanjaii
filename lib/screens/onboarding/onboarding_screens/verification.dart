@@ -1,10 +1,13 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import "package:firebase_auth/firebase_auth.dart";
 import "package:flutter/material.dart";
-import "package:flutter_dating_app/screens/onboarding/onboarding_screens/create_screen.dart";
-
+import 'package:flutter_dating_app/screens/home/home_no_bloc.dart';
+import 'package:flutter_dating_app/screens/onboarding/onbroading_screen.dart';
+// import "package:newwanjaii/homepage.dart";
+import '../../onboarding/onboarding_screens/create_screen.dart';
 import 'dart:async';
 
-import "package:flutter_dating_app/screens/onboarding/onbroading_screen.dart";
+// import "package:newwanjaii/main.dart";
 
 class UserVerification extends StatefulWidget {
   const UserVerification({super.key});
@@ -43,6 +46,7 @@ class _UserVerificationState extends State<UserVerification> {
     await FirebaseAuth.instance.currentUser!.reload();
     setState(() {
       isEmailVerified = FirebaseAuth.instance.currentUser!.emailVerified;
+      // if (isEmailVerified) {}
     });
     // if (isEmailVerified) {
     //   timer?.cancel();
@@ -181,7 +185,7 @@ class _UserVerificationState extends State<UserVerification> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => Create(title: 'Homepage')),
+                          builder: (context) => Create(title: "")),
                     );
                   },
                   style: ButtonStyle(

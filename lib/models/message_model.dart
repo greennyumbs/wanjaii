@@ -1,51 +1,32 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-/* class Message extends Equatable {
-  final int id;
-  final int senderId;
-  final int receiverId;
-  final String message;
-  final DateTime dateTime;
-  final String timeString;
-
-  const Message({
-    required this.id,
-    required this.senderId,
-    required this.receiverId,
-    required this.message,
-    required this.dateTime,
-    required this.timeString,
-  });
-
-  @override
-  List<Object?> get props =>
-      [id, senderId, receiverId, message, dateTime, timeString];
-}
- */
-
 class Message {
   final String senderId;
-  final String text;
+  final String senderEmail;
+  final String receiverId;
+  final String type;
+  final String message;
+  final String imageUrls;
   final Timestamp timestamp;
 
   Message({
     required this.senderId,
-    required this.text,
+    required this.senderEmail,
+    required this.receiverId,
+    required this.type,
+    required this.message,
+    required this.imageUrls,
     required this.timestamp,
   });
-
-  factory Message.fromMap(Map<String, dynamic> data) {
-    return Message(
-      senderId: data['senderId'] ?? '',
-      text: data['text'] ?? '',
-      timestamp: data['timestamp'],
-    );
-  }
 
   Map<String, dynamic> toMap() {
     return {
       'senderId': senderId,
-      'text': text,
+      'senderEmail': senderEmail,
+      'receiverId': receiverId,
+      'type': type,
+      'message': message,
+      'imageUrls': imageUrls,
       'timestamp': timestamp,
     };
   }
