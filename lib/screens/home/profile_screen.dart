@@ -4,7 +4,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_dating_app/models/user_model.dart';
 import 'package:flutter_dating_app/widgets/widgets.dart';
+<<<<<<< Updated upstream
 import 'package:insta_image_viewer/insta_image_viewer.dart';
+=======
+<<<<<<< HEAD
+import 'package:insta_image_viewer/insta_image_viewer.dart';
+=======
+>>>>>>> 080bdedd2e19e3dfc3647eb13ff7832da745d7ba
+>>>>>>> Stashed changes
 import 'package:readmore/readmore.dart';
 
 class ProfileScreen extends StatelessWidget {
@@ -307,6 +314,10 @@ class ProfileScreen extends StatelessWidget {
                       //fit: StackFit.expand,
                       children: [
                         Positioned.fill(
+<<<<<<< Updated upstream
+=======
+<<<<<<< HEAD
+>>>>>>> Stashed changes
                           child: InstaImageViewer(
                             child: Container(
                               decoration: BoxDecoration(
@@ -316,6 +327,18 @@ class ProfileScreen extends StatelessWidget {
                                 ),
                                 borderRadius: BorderRadius.circular(15),
                               ),
+<<<<<<< Updated upstream
+=======
+=======
+                          child: Container(
+                            decoration: BoxDecoration(
+                              image: DecorationImage(
+                                fit: BoxFit.cover,
+                                image: NetworkImage(user.imageUrls),
+                              ),
+                              borderRadius: BorderRadius.circular(15),
+>>>>>>> 080bdedd2e19e3dfc3647eb13ff7832da745d7ba
+>>>>>>> Stashed changes
                             ),
                           ),
                         ),

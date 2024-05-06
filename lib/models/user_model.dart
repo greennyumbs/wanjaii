@@ -15,10 +15,19 @@ class User extends Equatable {
   final String state;
   final String profileAbout;
   final List<String> likedUsers;
+<<<<<<< Updated upstream
+=======
+<<<<<<< HEAD
+>>>>>>> Stashed changes
   final String email;
   final String dob;
   final String phoneNumber;
   final String language;
+<<<<<<< Updated upstream
+=======
+=======
+>>>>>>> 080bdedd2e19e3dfc3647eb13ff7832da745d7ba
+>>>>>>> Stashed changes
 
   const User({
     required this.uid,
@@ -33,10 +42,19 @@ class User extends Equatable {
     required this.country,
     required this.state,
     required this.profileAbout,
+<<<<<<< Updated upstream
+=======
+<<<<<<< HEAD
+>>>>>>> Stashed changes
     required this.email,
     required this.dob,
     required this.phoneNumber,
     required this.language,
+<<<<<<< Updated upstream
+=======
+=======
+>>>>>>> 080bdedd2e19e3dfc3647eb13ff7832da745d7ba
+>>>>>>> Stashed changes
     this.likedUsers = const [],
   });
 
@@ -55,10 +73,19 @@ class User extends Equatable {
       "jobTitle": jobTitle,
       "interests": interests,
       "likedUsers": likedUsers,
+<<<<<<< Updated upstream
+=======
+<<<<<<< HEAD
+>>>>>>> Stashed changes
       "email": email,
       "dob": dob,
       "phone": phoneNumber,
       "language": language,
+<<<<<<< Updated upstream
+=======
+=======
+>>>>>>> 080bdedd2e19e3dfc3647eb13ff7832da745d7ba
+>>>>>>> Stashed changes
     };
   }
 
@@ -76,10 +103,19 @@ class User extends Equatable {
     String? state,
     String? profileAbout,
     List<String>? likedUsers,
+<<<<<<< Updated upstream
+=======
+<<<<<<< HEAD
+>>>>>>> Stashed changes
     String? email,
     String? dob,
     String? phoneNumber,
     String? language,
+<<<<<<< Updated upstream
+=======
+=======
+>>>>>>> 080bdedd2e19e3dfc3647eb13ff7832da745d7ba
+>>>>>>> Stashed changes
   }) {
     return User(
       uid: uid ?? this.uid,
@@ -95,10 +131,19 @@ class User extends Equatable {
       state: state ?? this.state,
       profileAbout: profileAbout ?? this.profileAbout,
       likedUsers: likedUsers ?? this.likedUsers,
+<<<<<<< Updated upstream
+=======
+<<<<<<< HEAD
+>>>>>>> Stashed changes
       email: email ?? this.email,
       dob: dob ?? this.dob,
       phoneNumber: phoneNumber ?? this.phoneNumber,
       language: language ?? this.language,
+<<<<<<< Updated upstream
+=======
+=======
+>>>>>>> 080bdedd2e19e3dfc3647eb13ff7832da745d7ba
+>>>>>>> Stashed changes
     );
   }
 
@@ -117,10 +162,19 @@ class User extends Equatable {
       state: data['state'] ?? '',
       profileAbout: data['profileAbout'] ?? '',
       likedUsers: List<String>.from(data['likedUsers'] ?? []),
+<<<<<<< Updated upstream
+=======
+<<<<<<< HEAD
+>>>>>>> Stashed changes
       email: data['email'] ?? '',
       dob: data['dob'] ?? '',
       phoneNumber: data['phoneNumber'] ?? '',
       language: data['language'] ?? '',
+<<<<<<< Updated upstream
+=======
+=======
+>>>>>>> 080bdedd2e19e3dfc3647eb13ff7832da745d7ba
+>>>>>>> Stashed changes
     );
   }
 
@@ -139,10 +193,19 @@ class User extends Equatable {
         jobTitle,
         interests,
         likedUsers,
+<<<<<<< Updated upstream
+=======
+<<<<<<< HEAD
+>>>>>>> Stashed changes
         email,
         dob,
         phoneNumber,
         language,
+<<<<<<< Updated upstream
+=======
+=======
+>>>>>>> 080bdedd2e19e3dfc3647eb13ff7832da745d7ba
+>>>>>>> Stashed changes
       ];
 
   static User fromSnapshot(DocumentSnapshot snap) {
@@ -160,10 +223,19 @@ class User extends Equatable {
       country: snap['country'],
       state: snap['state'],
       profileAbout: snap['profileAbout'],
+<<<<<<< Updated upstream
+=======
+<<<<<<< HEAD
+>>>>>>> Stashed changes
       email: snap['email'],
       dob: snap['dob'],
       phoneNumber: snap['phoneNumber'],
       language: snap['language'],
+<<<<<<< Updated upstream
+=======
+=======
+>>>>>>> 080bdedd2e19e3dfc3647eb13ff7832da745d7ba
+>>>>>>> Stashed changes
     );
     return users;
   }
@@ -183,10 +255,19 @@ class User extends Equatable {
       state: json['state'] ?? '',
       profileAbout: json['profileAbout'] ?? '',
       likedUsers: List<String>.from(json['likedUsers'] ?? []),
+<<<<<<< Updated upstream
+=======
+<<<<<<< HEAD
+>>>>>>> Stashed changes
       email: json['email'] ?? '',
       dob: json['dob'] ?? '',
       phoneNumber: json['phoneNumber'] ?? '',
       language: json['language'] ?? '',
+<<<<<<< Updated upstream
+=======
+=======
+>>>>>>> 080bdedd2e19e3dfc3647eb13ff7832da745d7ba
+>>>>>>> Stashed changes
     );
   }
 }

@@ -23,10 +23,19 @@ class StartOnboarding extends OnboardingEvent {
       country: '',
       state: '',
       profileAbout: '',
+<<<<<<< Updated upstream
+=======
+<<<<<<< HEAD
+>>>>>>> Stashed changes
       email: '',
       dob: '',
       phoneNumber: '',
       language: '',
+<<<<<<< Updated upstream
+=======
+=======
+>>>>>>> 080bdedd2e19e3dfc3647eb13ff7832da745d7ba
+>>>>>>> Stashed changes
     ),
   });
 

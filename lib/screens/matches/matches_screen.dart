@@ -1,12 +1,34 @@
+<<<<<<< Updated upstream
+=======
+<<<<<<< HEAD
+>>>>>>> Stashed changes
 import 'package:flutter/material.dart';
 import 'dart:ui';
 import 'package:firebase_auth/firebase_auth.dart' hide User;
 import 'package:flutter_dating_app/models/user_model.dart';
 import 'package:flutter_dating_app/screens/home/match.dart';
+<<<<<<< Updated upstream
+=======
+=======
+import 'dart:convert';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart' hide User;
+import 'package:flutter/material.dart';
+import 'dart:ui';
+import 'package:flutter_dating_app/models/user_model.dart';
+import 'package:flutter_dating_app/services/firestore_service.dart';
+>>>>>>> 080bdedd2e19e3dfc3647eb13ff7832da745d7ba
+>>>>>>> Stashed changes
 import 'package:flutter_dating_app/widgets/bottom_nav_bar.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+<<<<<<< Updated upstream
+=======
+
+import 'package:http/http.dart' as http;
+>>>>>>> Stashed changes
 
 class MatchesScreen extends StatefulWidget {
   static const String routeName = '/Matches';
@@ -35,6 +57,7 @@ class _MatchesScreenState extends State<MatchesScreen> {
 
   Future<void> _fetchData() async {
     try {
+<<<<<<< HEAD
       final users = await firestoreService.fetchUsers();
       final uid = FirebaseAuth.instance.currentUser?.uid;
       setState(() {
@@ -45,6 +68,27 @@ class _MatchesScreenState extends State<MatchesScreen> {
       });
       print('login user uid: $uid');
       print('Fetching user: $_users');
+<<<<<<< Updated upstream
+=======
+=======
+      final currentUserId = FirebaseAuth.instance.currentUser?.uid;
+      final response =
+          await http.get(Uri.parse('http://192.168.1.39:3000/users'));
+      if (response.statusCode == 200) {
+        final usersJson = json.decode(response.body);
+        setState(() {
+          _users = usersJson
+              .map<User>((userJson) => User.fromJson(userJson))
+              .where((user) =>
+                  user.uid != currentUserId &&
+                  user.likedUsers.contains(currentUserId))
+              .toList();
+        });
+      } else {
+        print('Failed to fetch users: ${response.statusCode}');
+      }
+>>>>>>> 080bdedd2e19e3dfc3647eb13ff7832da745d7ba
+>>>>>>> Stashed changes
     } catch (error) {
       print('Error fetching users: $error');
     }
@@ -62,6 +106,10 @@ class _MatchesScreenState extends State<MatchesScreen> {
     });
   }
 
+<<<<<<< Updated upstream
+=======
+<<<<<<< HEAD
+>>>>>>> Stashed changes
   void _onKeepSwiping(List<User> swipedUsers) {
     setState(() {
       _swipedUsers = swipedUsers;
@@ -121,6 +169,14 @@ class _MatchesScreenState extends State<MatchesScreen> {
   Widget _buildUserCard(User user) {
     return Card(
       margin: EdgeInsets.all(10),
+<<<<<<< Updated upstream
+=======
+=======
+  Widget _buildUserCard(User user) {
+    return Card(
+      //margin: EdgeInsets.all(10),
+>>>>>>> 080bdedd2e19e3dfc3647eb13ff7832da745d7ba
+>>>>>>> Stashed changes
       elevation: 2,
       child: SizedBox(
         height: 200,
@@ -206,9 +262,19 @@ class _MatchesScreenState extends State<MatchesScreen> {
                               child: IconButton(
                                 icon: Icon(Icons.favorite),
                                 color: Colors.white,
+<<<<<<< Updated upstream
                                 onPressed: () {
                                   _matchUsers(user);
                                 },
+=======
+<<<<<<< HEAD
+                                onPressed: () {
+                                  _matchUsers(user);
+                                },
+=======
+                                onPressed: () {},
+>>>>>>> 080bdedd2e19e3dfc3647eb13ff7832da745d7ba
+>>>>>>> Stashed changes
                               ),
                             ),
                           ),
@@ -288,11 +354,25 @@ class _MatchesScreenState extends State<MatchesScreen> {
               ),
               child: IconButton(
                 icon: Icon(
+<<<<<<< Updated upstream
+=======
+<<<<<<< HEAD
+>>>>>>> Stashed changes
                   Icons.sort,
                   color: Theme.of(context).primaryColor,
                   size: 30,
                 ),
                 onPressed: _sortData,
+<<<<<<< Updated upstream
+=======
+=======
+                  Icons.swap_vert,
+                  color: Theme.of(context).primaryColor,
+                  size: 30,
+                ),
+                onPressed: () {},
+>>>>>>> 080bdedd2e19e3dfc3647eb13ff7832da745d7ba
+>>>>>>> Stashed changes
               ),
             ),
           ),
@@ -301,6 +381,10 @@ class _MatchesScreenState extends State<MatchesScreen> {
       bottomNavigationBar: const BottomNavBar(index: 1),
       body: SingleChildScrollView(
         child: Container(
+<<<<<<< Updated upstream
+=======
+<<<<<<< HEAD
+>>>>>>> Stashed changes
           padding: EdgeInsets.fromLTRB(35, 0, 30, 0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -317,6 +401,28 @@ class _MatchesScreenState extends State<MatchesScreen> {
               SizedBox(height: 20),
               _buildUserList(),
             ],
+=======
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(40, 0, 40, 0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                      "This is a list of people who have liked you and your matches.",
+                      style: TextStyle(
+                        color: Colors.grey,
+                        fontFamily: 'Sk-Modernist',
+                        fontWeight: FontWeight.w600,
+                        fontSize: 16,
+                      )),
+                  SizedBox(height: 20),
+                  _buildUserList(),
+                ],
+              ),
+            ),
+>>>>>>> 080bdedd2e19e3dfc3647eb13ff7832da745d7ba
           ),
         ),
       ),

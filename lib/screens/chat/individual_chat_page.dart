@@ -2,7 +2,14 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_dating_app/services/chat_service.dart';
+<<<<<<< Updated upstream
 import 'package:flutter_dating_app/services/storage_service.dart';
+=======
+<<<<<<< HEAD
+import 'package:flutter_dating_app/services/storage_service.dart';
+=======
+>>>>>>> 080bdedd2e19e3dfc3647eb13ff7832da745d7ba
+>>>>>>> Stashed changes
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dating_app/screens/chat/chat_bubbles.dart';
@@ -60,6 +67,10 @@ class _IndividualChatPageState extends State<IndividualChatPage> {
     }
   }
 
+<<<<<<< Updated upstream
+=======
+<<<<<<< HEAD
+>>>>>>> Stashed changes
   void sendImage() async {
     final imagePath = await StorageService().pickImage();
     if (imagePath != null) {
@@ -75,14 +86,36 @@ class _IndividualChatPageState extends State<IndividualChatPage> {
   String name = "";
   fetchImagePath() async {
     QuerySnapshot imageProfilePathQuery = await FirebaseFirestore.instance
+<<<<<<< Updated upstream
+=======
+=======
+  final currentUser = FirebaseAuth.instance.currentUser!.uid;
+
+  String imagePath = "";
+  fetchImagePath() async {
+    QuerySnapshot imagePathQuery = await FirebaseFirestore.instance
+>>>>>>> 080bdedd2e19e3dfc3647eb13ff7832da745d7ba
+>>>>>>> Stashed changes
         .collection("users")
         .where("uid", isEqualTo: widget.receiverId)
         .get();
     // print("this is query");
+<<<<<<< Updated upstream
+=======
+<<<<<<< HEAD
+>>>>>>> Stashed changes
     // print(imageProfilePathQuery.docs[0]["imageUrls"]);
     setState(() {
       imageProfilePath = imageProfilePathQuery.docs[0]["imageUrls"];
       name = imageProfilePathQuery.docs[0]["name"];
+<<<<<<< Updated upstream
+=======
+=======
+    // print(imagePathQuery.docs[0]["imageUrls"]);
+    setState(() {
+      imagePath = imagePathQuery.docs[0]["imageUrls"];
+>>>>>>> 080bdedd2e19e3dfc3647eb13ff7832da745d7ba
+>>>>>>> Stashed changes
     });
   }
 
@@ -95,13 +128,29 @@ class _IndividualChatPageState extends State<IndividualChatPage> {
           children: [
             CircleAvatar(
               radius: 20.0,
+<<<<<<< Updated upstream
               backgroundImage: NetworkImage(imageProfilePath),
+=======
+<<<<<<< HEAD
+              backgroundImage: NetworkImage(imageProfilePath),
+=======
+              backgroundImage: NetworkImage(imagePath),
+>>>>>>> 080bdedd2e19e3dfc3647eb13ff7832da745d7ba
+>>>>>>> Stashed changes
             ),
             const SizedBox(
               width: 10,
             ),
             Text(
+<<<<<<< Updated upstream
               name,
+=======
+<<<<<<< HEAD
+              name,
+=======
+              widget.receiverEmail,
+>>>>>>> 080bdedd2e19e3dfc3647eb13ff7832da745d7ba
+>>>>>>> Stashed changes
               style: const TextStyle(
                 color: Color(0xFFBB254A),
               ),
@@ -163,12 +212,24 @@ class _IndividualChatPageState extends State<IndividualChatPage> {
             isCurrentUser ? CrossAxisAlignment.end : CrossAxisAlignment.start,
         children: [
           ChatBubbles(
+<<<<<<< Updated upstream
+=======
+<<<<<<< HEAD
+>>>>>>> Stashed changes
             message: data["message"],
             isCurrentUser: isCurrentUser,
             timestamp: data["timestamp"],
             type: data["type"],
             imageUrls: data["imageUrls"],
           ),
+<<<<<<< Updated upstream
+=======
+=======
+              message: data["message"],
+              isCurrentUser: isCurrentUser,
+              timestamp: data["timestamp"]),
+>>>>>>> 080bdedd2e19e3dfc3647eb13ff7832da745d7ba
+>>>>>>> Stashed changes
           Container(
             // padding: const EdgeInsets.all(16),
             margin: const EdgeInsets.symmetric(vertical: 2.5, horizontal: 25),
@@ -195,11 +256,20 @@ class _IndividualChatPageState extends State<IndividualChatPage> {
         height: 80,
         child: Row(
           children: [
+<<<<<<< Updated upstream
+=======
+<<<<<<< HEAD
+>>>>>>> Stashed changes
             IconButton(
               onPressed: () =>
                   {sendImage()}, // Arrow function for sequential execution
               icon: const Icon(Icons.photo, color: Color(0xFFBB254A)),
             ),
+<<<<<<< Updated upstream
+=======
+=======
+>>>>>>> 080bdedd2e19e3dfc3647eb13ff7832da745d7ba
+>>>>>>> Stashed changes
             Expanded(
               child: TextField(
                 controller: messageController,

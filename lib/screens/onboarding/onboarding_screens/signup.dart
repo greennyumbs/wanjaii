@@ -2,9 +2,20 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 // import 'package:http/http.dart' as http;s
 import 'package:firebase_auth/firebase_auth.dart';
+<<<<<<< Updated upstream
 
 // import 'package:newwanjaii/signin.dart';
 import '../../onboarding/onboarding_screens/signin.dart';
+=======
+<<<<<<< HEAD
+
+// import 'package:newwanjaii/signin.dart';
+import '../../onboarding/onboarding_screens/signin.dart';
+=======
+import 'package:flutter_dating_app/screens/onboarding/onboarding_screens/signin.dart';
+import 'package:flutter_dating_app/screens/onboarding/onboarding_screens/verification.dart';
+>>>>>>> 080bdedd2e19e3dfc3647eb13ff7832da745d7ba
+>>>>>>> Stashed changes
 
 class SignUp extends StatefulWidget {
   const SignUp({super.key});
@@ -157,17 +168,35 @@ class _SignUpState extends State<SignUp> {
     return Scaffold(
         body: SingleChildScrollView(
       child: Padding(
+<<<<<<< Updated upstream
         padding: const EdgeInsets.only(top: 130.0),
+=======
+<<<<<<< HEAD
+        padding: const EdgeInsets.only(top: 130.0),
+=======
+        padding: const EdgeInsets.only(top: 100.0),
+>>>>>>> 080bdedd2e19e3dfc3647eb13ff7832da745d7ba
+>>>>>>> Stashed changes
         child: Center(
             child: Form(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
+<<<<<<< Updated upstream
+=======
+<<<<<<< HEAD
+>>>>>>> Stashed changes
               const Image(
                 image: AssetImage('assets/images/logo.png'),
                 width: 200.0, // Adjust width as needed (in pixels)
                 height: 100.0, // Adjust height as needed (in pixels)
               ),
+<<<<<<< Updated upstream
+=======
+=======
+              const Image(image: AssetImage('assets/images/logo.png')),
+>>>>>>> 080bdedd2e19e3dfc3647eb13ff7832da745d7ba
+>>>>>>> Stashed changes
               const SizedBox(height: 20),
               const Text(
                 "Let's Get Started",
@@ -250,7 +279,15 @@ class _SignUpState extends State<SignUp> {
                       contentPadding: const EdgeInsets.all(20.0)),
                 ),
               ),
+<<<<<<< Updated upstream
               const SizedBox(height: 150),
+=======
+<<<<<<< HEAD
+              const SizedBox(height: 150),
+=======
+              const SizedBox(height: 110),
+>>>>>>> 080bdedd2e19e3dfc3647eb13ff7832da745d7ba
+>>>>>>> Stashed changes
               ElevatedButton(
                   onPressed: () async {
                     registerUser();

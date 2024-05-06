@@ -16,9 +16,19 @@ class ChatServices {
         senderId: currentUserID,
         senderEmail: currentUserEmail,
         receiverId: receiverId,
+<<<<<<< Updated upstream
         type: "text",
         message: message,
         imageUrls: "",
+=======
+<<<<<<< HEAD
+        type: "text",
+        message: message,
+        imageUrls: "",
+=======
+        message: message,
+>>>>>>> 080bdedd2e19e3dfc3647eb13ff7832da745d7ba
+>>>>>>> Stashed changes
         timestamp: timestamp);
 
     //Construct a chat room id
@@ -31,6 +41,10 @@ class ChatServices {
         .doc(chatRoomId)
         .collection("messages")
         .add(newMessage.toMap());
+<<<<<<< Updated upstream
+=======
+<<<<<<< HEAD
+>>>>>>> Stashed changes
 
     // Update match collection for both user1 and user2 using logical OR
     await FirebaseFirestore.instance
@@ -99,6 +113,7 @@ class ChatServices {
 
   // }
 
+<<<<<<< Updated upstream
   //Get Message
   Stream<QuerySnapshot> getMessages(String userId, otherUserId) {
     List<String> ids = [userId, otherUserId];
@@ -112,6 +127,25 @@ class ChatServices {
         .snapshots();
   }
 
+=======
+=======
+  }
+
+>>>>>>> 080bdedd2e19e3dfc3647eb13ff7832da745d7ba
+  //Get Message
+  Stream<QuerySnapshot> getMessages(String userId, otherUserId) {
+    List<String> ids = [userId, otherUserId];
+    ids.sort();
+    String chatRoomId = ids.join('_');
+    return FirebaseFirestore.instance
+        .collection("chat_room")
+        .doc(chatRoomId)
+        .collection("messages")
+        .orderBy("timestamp", descending: false)
+        .snapshots();
+  }
+
+>>>>>>> Stashed changes
   // Stream<DocumentSnapshot?> getLatestMessage(
   //     String userId, String otherUserId) {
   //   List<String> ids = [userId, otherUserId];

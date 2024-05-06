@@ -29,6 +29,13 @@ class UserScreen extends StatefulWidget {
 }
 
 class _UserScreenState extends State<UserScreen> {
+<<<<<<< Updated upstream
+=======
+<<<<<<< HEAD
+=======
+  //final _bioController = TextEditingController();
+>>>>>>> 080bdedd2e19e3dfc3647eb13ff7832da745d7ba
+>>>>>>> Stashed changes
   String? _imageUrls;
   User? _currentUser;
   @override
@@ -40,7 +47,15 @@ class _UserScreenState extends State<UserScreen> {
 
   Future<void> _fetchUserData() async {
     final userData = await UserService().getUserData();
+<<<<<<< Updated upstream
     print(userData);
+=======
+<<<<<<< HEAD
+    print(userData);
+=======
+    //_bioController.text = userData.bio;
+>>>>>>> 080bdedd2e19e3dfc3647eb13ff7832da745d7ba
+>>>>>>> Stashed changes
     _imageUrls = userData.imageUrls;
 
     setState(() {});
@@ -157,6 +172,10 @@ class _UserScreenState extends State<UserScreen> {
         ],
       ),
       bottomNavigationBar: const BottomNavBar(index: 3),
+<<<<<<< Updated upstream
+=======
+<<<<<<< HEAD
+>>>>>>> Stashed changes
       body: SingleChildScrollView(
         child: Center(
           child: Column(
@@ -471,6 +490,50 @@ class _UserScreenState extends State<UserScreen> {
               SizedBox(height: 16.0),
             ],
           ),
+<<<<<<< Updated upstream
+=======
+=======
+      body: Padding(
+        padding: EdgeInsets.all(16.0),
+        child: Column(
+          children: [
+            CircleAvatar(
+              radius: 50,
+              backgroundImage: _imageUrls != null
+                  ? NetworkImage(_imageUrls!)
+                  : AssetImage('assets/images/profile_placeholder.png')
+                      as ImageProvider,
+            ),
+            /*  SizedBox(height: 16.0),
+            TextFormField(
+              controller: _bioController,
+              decoration: InputDecoration(labelText: 'Bio'),
+            ),
+            SizedBox(height: 16.0),
+            ElevatedButton(
+              onPressed: () async {
+                // Update user bio
+                await UserService().updateUserBio(bio: _bioController.text);
+              },
+              child: Text('Update Bio'),
+            ), */
+            ElevatedButton(
+              onPressed: () async {
+                // Update user profile image
+                final imagePath = await StorageService().pickImage();
+                if (imagePath != null) {
+                  final imageUrls =
+                      await StorageService().uploadImage(imagePath);
+                  await UserService().updateUserImage(imageUrls: imageUrls);
+                  _imageUrls = imageUrls;
+                  setState(() {});
+                }
+              },
+              child: Text('Update Profile Image'),
+            ),
+          ],
+>>>>>>> 080bdedd2e19e3dfc3647eb13ff7832da745d7ba
+>>>>>>> Stashed changes
         ),
       ),
     );

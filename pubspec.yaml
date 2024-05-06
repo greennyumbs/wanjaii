@@ -54,7 +54,14 @@ dependencies:
   toggle_switch: ^2.3.0
   readmore: ^3.0.0
   google_maps_flutter: ^2.6.1
+<<<<<<< Updated upstream
   insta_image_viewer: ^1.0.4
+=======
+<<<<<<< HEAD
+  insta_image_viewer: ^1.0.4
+=======
+>>>>>>> 080bdedd2e19e3dfc3647eb13ff7832da745d7ba
+>>>>>>> Stashed changes
 
 dev_dependencies:
   flutter_test:

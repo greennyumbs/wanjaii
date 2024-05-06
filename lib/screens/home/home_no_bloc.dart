@@ -14,7 +14,14 @@ import '../../models/user_model.dart';
 
 //const ip = '192.168.100.107'; //POOHPOOM
 const ip = '192.168.1.39'; //My home
+<<<<<<< Updated upstream
 //const ip = '172.20.10.2'; //My home
+=======
+<<<<<<< HEAD
+//const ip = '172.20.10.2'; //My home
+=======
+>>>>>>> 080bdedd2e19e3dfc3647eb13ff7832da745d7ba
+>>>>>>> Stashed changes
 
 class HomeScreen extends StatefulWidget {
   static const String routeName = '/';
