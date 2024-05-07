@@ -157,133 +157,129 @@ class _SignUpState extends State<SignUp> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: SingleChildScrollView(
-      child: Padding(
-        padding: const EdgeInsets.only(top: 130.0),
-        child: Center(
-            child: Form(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const Image(
-                image: AssetImage('assets/images/logo.png'),
-                width: 200.0, // Adjust width as needed (in pixels)
-                height: 100.0, // Adjust height as needed (in pixels)
+      body: Center(
+          child: Form(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Image(
+              image: AssetImage('assets/images/logo.png'),
+              width: 200.0, // Adjust width as needed (in pixels)
+              height: 100.0, // Adjust height as needed (in pixels)
+            ),
+            const SizedBox(height: 20),
+            const Text(
+              "Let's Get Started",
+              style: TextStyle(
+                fontSize: 24,
+                fontFamily: 'Sk-Modernist',
+                fontWeight: FontWeight.bold,
+                color: Color(0xFF000000),
               ),
-              const SizedBox(height: 20),
-              const Text(
-                "Let's Get Started",
-                style: TextStyle(
-                  fontSize: 24,
-                  fontFamily: 'Sk-Modernist',
-                  fontWeight: FontWeight.bold,
-                  color: Color(0xFF000000),
-                ),
+            ),
+            const SizedBox(height: 10),
+            const Text(
+              "We are happy to see you here!",
+              style: TextStyle(
+                fontSize: 14,
+                fontFamily: 'Sk-Modernist',
+                color: Color(0xFF6C6C6C),
               ),
-              const SizedBox(height: 10),
-              const Text(
-                "We are happy to see you here!",
-                style: TextStyle(
-                  fontSize: 14,
-                  fontFamily: 'Sk-Modernist',
-                  color: Color(0xFF6C6C6C),
-                ),
+            ),
+            const SizedBox(height: 50),
+            SizedBox(
+              width: 295,
+              height: 56,
+              child: TextField(
+                controller: emailValue,
+                keyboardType: TextInputType.emailAddress,
+                // onSaved: (String email) {
+                //   profile.email = email;
+                // },
+                decoration: InputDecoration(
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(15.0),
+                    ),
+                    hintText: "Enter Email",
+                    hintStyle: const TextStyle(
+                      fontSize: 16,
+                      fontFamily: 'Sk-Modernist',
+                      color: Color(0xFFB3B3B3),
+                    ),
+                    contentPadding: const EdgeInsets.all(20.0)),
               ),
-              const SizedBox(height: 50),
-              SizedBox(
-                width: 295,
-                height: 56,
-                child: TextField(
-                  controller: emailValue,
-                  keyboardType: TextInputType.emailAddress,
-                  // onSaved: (String email) {
-                  //   profile.email = email;
-                  // },
-                  decoration: InputDecoration(
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(15.0),
-                      ),
-                      hintText: "Enter Email",
-                      hintStyle: const TextStyle(
-                        fontSize: 16,
-                        fontFamily: 'Sk-Modernist',
-                        color: Color(0xFFB3B3B3),
-                      ),
-                      contentPadding: const EdgeInsets.all(20.0)),
-                ),
+            ),
+            const SizedBox(height: 15),
+            SizedBox(
+              width: 295,
+              height: 56,
+              child: TextField(
+                controller: passwordValue,
+                obscureText: true,
+                decoration: InputDecoration(
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(15.0),
+                    ),
+                    hintText: "Password",
+                    hintStyle: const TextStyle(
+                      fontSize: 16,
+                      fontFamily: 'Sk-Modernist',
+                      color: Color(0xFFB3B3B3),
+                    ),
+                    contentPadding: const EdgeInsets.all(20.0)),
               ),
-              const SizedBox(height: 15),
-              SizedBox(
-                width: 295,
-                height: 56,
-                child: TextField(
-                  controller: passwordValue,
-                  obscureText: true,
-                  decoration: InputDecoration(
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(15.0),
-                      ),
-                      hintText: "Password",
-                      hintStyle: const TextStyle(
-                        fontSize: 16,
-                        fontFamily: 'Sk-Modernist',
-                        color: Color(0xFFB3B3B3),
-                      ),
-                      contentPadding: const EdgeInsets.all(20.0)),
-                ),
+            ),
+            const SizedBox(height: 15),
+            SizedBox(
+              width: 295,
+              height: 56,
+              child: TextField(
+                controller: confirmPasswordValue,
+                obscureText: true,
+                decoration: InputDecoration(
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(15.0),
+                    ),
+                    hintText: "Confirm Password",
+                    hintStyle: const TextStyle(
+                      fontSize: 16,
+                      fontFamily: 'Sk-Modernist',
+                      color: Color(0xFFB3B3B3),
+                    ),
+                    contentPadding: const EdgeInsets.all(20.0)),
               ),
-              const SizedBox(height: 15),
-              SizedBox(
-                width: 295,
-                height: 56,
-                child: TextField(
-                  controller: confirmPasswordValue,
-                  obscureText: true,
-                  decoration: InputDecoration(
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(15.0),
-                      ),
-                      hintText: "Confirm Password",
-                      hintStyle: const TextStyle(
-                        fontSize: 16,
-                        fontFamily: 'Sk-Modernist',
-                        color: Color(0xFFB3B3B3),
-                      ),
-                      contentPadding: const EdgeInsets.all(20.0)),
-                ),
-              ),
-              const SizedBox(height: 150),
-              ElevatedButton(
-                  onPressed: () async {
-                    registerUser();
-                    print('Sign Up button pressed');
-                  },
-                  style: ButtonStyle(
-                    backgroundColor: MaterialStateProperty.all<Color>(
-                        const Color(0xFFBB254A)), // Change button color
-                    minimumSize: MaterialStateProperty.all<Size>(
-                        const Size(295, 56)), // Set button width and height
-                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                      RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(
-                            15.0), // Set border radius here
-                      ),
+            ),
+            const SizedBox(height: 30),
+            ElevatedButton(
+                onPressed: () async {
+                  registerUser();
+                  print('Sign Up button pressed');
+                },
+                style: ButtonStyle(
+                  backgroundColor: MaterialStateProperty.all<Color>(
+                      const Color(0xFFBB254A)), // Change button color
+                  minimumSize: MaterialStateProperty.all<Size>(
+                      const Size(295, 56)), // Set button width and height
+                  shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                    RoundedRectangleBorder(
+                      borderRadius:
+                          BorderRadius.circular(15.0), // Set border radius here
                     ),
                   ),
-                  child: const Text(
-                    'Sign Up',
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                      fontFamily: 'Sk-Modernist',
-                      color: Color(0xFFFFFFFF),
-                    ),
-                  ))
-            ],
-          ),
-        )),
-      ),
-    ));
+                ),
+                child: const Text(
+                  'Sign Up',
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    fontFamily: 'Sk-Modernist',
+                    color: Color(0xFFFFFFFF),
+                  ),
+                ))
+          ],
+        ),
+      )),
+    );
   }
 }
 
