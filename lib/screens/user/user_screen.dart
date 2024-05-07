@@ -72,19 +72,25 @@ class _UserScreenState extends State<UserScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        toolbarHeight: 100,
+        //backgroundColor: Colors.transparent,
+        elevation: 0,
+        centerTitle: false,
         automaticallyImplyLeading: false,
-        title: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 8.0),
-          child: Text(
-            ('Profile'),
-            style: TextStyle(
-              fontSize: 32,
-              fontWeight: FontWeight.bold,
-              fontFamily: 'Sk-Modernist',
-            ),
+        title: const Padding(
+          padding: EdgeInsets.fromLTRB(25, 0, 0, 0),
+          child: Column(
+            children: [
+              Text('Profile',
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontFamily: 'Sk-Modernist',
+                    fontWeight: FontWeight.w800,
+                    fontSize: 32,
+                  )),
+            ],
           ),
         ),
-        backgroundColor: Colors.white,
         actions: [
           IconButton(
             icon: Icon(Icons.edit),
@@ -101,7 +107,7 @@ class _UserScreenState extends State<UserScreen> {
               await FirebaseAuth.instance.signOut();
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => Create(title: "")),
+                MaterialPageRoute(builder: (context) => const SignIn()),
               );
               // Navigate to the login screen
             },
@@ -128,10 +134,11 @@ class _UserScreenState extends State<UserScreen> {
                 child: Stack(
                   children: [
                     Container(
-                      width: 160,
-                      height: 160,
+                      width: 200, // เปลี่ยนจาก 160 เป็น 200
+                      height: 200, // เปลี่ยนจาก 160 เป็น 200
                       decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(80),
+                        borderRadius: BorderRadius.circular(
+                            100), // เปลี่ยนจาก 80 เป็น 100
                         border: Border.all(
                           color: Color.fromRGBO(233, 64, 87, 0.3),
                           width: 30,
@@ -139,10 +146,10 @@ class _UserScreenState extends State<UserScreen> {
                       ),
                     ),
                     Container(
-                      width: 160,
-                      height: 160,
+                      width: 200,
+                      height: 200,
                       decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(80),
+                        borderRadius: BorderRadius.circular(100),
                         border: Border.all(
                           color: Color.fromRGBO(233, 64, 87, 0.5),
                           width: 10,
@@ -151,7 +158,7 @@ class _UserScreenState extends State<UserScreen> {
                       child: Padding(
                         padding: const EdgeInsets.all(30.0),
                         child: CircleAvatar(
-                          radius: 80,
+                          radius: 100,
                           backgroundImage: _imageUrls != null
                               ? NetworkImage(_imageUrls!)
                               : AssetImage(
@@ -402,10 +409,11 @@ class _UserScreenState extends State<UserScreen> {
                                               ? _currentUser!.city
                                               : 'city',
                                           style: TextStyle(
-                                            fontSize: 15.0,
-                                            fontWeight: FontWeight.bold,
-                                            fontFamily: 'Sk-Modernist',
-                                          ),
+                                              fontSize: 15.0,
+                                              fontWeight: FontWeight.bold,
+                                              fontFamily: 'Sk-Modernist',
+                                              color: const Color.fromARGB(
+                                                  255, 178, 173, 173)),
                                         ),
                                       ),
                                     ],
@@ -450,10 +458,11 @@ class _UserScreenState extends State<UserScreen> {
                                               ? _currentUser!.state
                                               : 'state',
                                           style: TextStyle(
-                                            fontSize: 15.0,
-                                            fontWeight: FontWeight.bold,
-                                            fontFamily: 'Sk-Modernist',
-                                          ),
+                                              fontSize: 15.0,
+                                              fontWeight: FontWeight.bold,
+                                              fontFamily: 'Sk-Modernist',
+                                              color: const Color.fromARGB(
+                                                  255, 178, 173, 173)),
                                         ),
                                       ),
                                     ],
@@ -498,10 +507,11 @@ class _UserScreenState extends State<UserScreen> {
                                               ? _currentUser!.country
                                               : 'country',
                                           style: TextStyle(
-                                            fontSize: 15.0,
-                                            fontWeight: FontWeight.bold,
-                                            fontFamily: 'Sk-Modernist',
-                                          ),
+                                              fontSize: 15.0,
+                                              fontWeight: FontWeight.bold,
+                                              fontFamily: 'Sk-Modernist',
+                                              color: const Color.fromARGB(
+                                                  255, 178, 173, 173)),
                                         ),
                                       ),
                                     ],
@@ -546,10 +556,11 @@ class _UserScreenState extends State<UserScreen> {
                                               ? _currentUser!.gender
                                               : 'gender',
                                           style: TextStyle(
-                                            fontSize: 15.0,
-                                            fontWeight: FontWeight.bold,
-                                            fontFamily: 'Sk-Modernist',
-                                          ),
+                                              fontSize: 15.0,
+                                              fontWeight: FontWeight.bold,
+                                              fontFamily: 'Sk-Modernist',
+                                              color: const Color.fromARGB(
+                                                  255, 178, 173, 173)),
                                         ),
                                       ),
                                     ],
