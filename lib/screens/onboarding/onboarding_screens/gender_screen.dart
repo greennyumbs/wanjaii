@@ -37,7 +37,7 @@ class _GenderSelectionScreenState extends State<GenderSelectionScreen> {
       widget.onGenderSelected(isWoman, isChooseAnother: isChooseAnother);
     });
     // Store the selected gender in Firestore
-    _storeGenderInFirestore(isWoman);
+    _storeGenderInFirestore(isWoman, isNotSelected: isChooseAnother);
   }
 
   @override
@@ -225,12 +225,21 @@ class _GenderSelectionScreenState extends State<GenderSelectionScreen> {
   }
 }
 
-Future<void> _storeGenderInFirestore(bool isWoman) async {
+Future<void> _storeGenderInFirestore(bool isWoman,
+    {bool isNotSelected = false}) async {
   final user = FirebaseAuth.instance.currentUser;
   if (user != null) {
+    String gender;
+    if (isNotSelected) {
+      gender = 'not specific';
+    } else {
+      gender = isWoman ? 'woman' : 'man';
+    }
     await FirebaseFirestore.instance.collection('users').doc(user.uid).set({
-      'gender': isWoman ? 'woman' : 'man',
+      'gender': gender,
       'likedUsers': [],
+    });
+    await FirebaseFirestore.instance.collection('users').add({
       'uid': user.uid,
     });
   }
