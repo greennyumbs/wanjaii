@@ -33,6 +33,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   TextEditingController _phoneNumberController = TextEditingController();
   TextEditingController _stateController = TextEditingController();
   TextEditingController _countryController = TextEditingController();
+  TextEditingController _profileAboutController = TextEditingController();
+  TextEditingController _jobTitleController = TextEditingController();
 
   @override
   void initState() {
@@ -65,6 +67,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           _languageController.text = userData['language'] ?? '';
           _genderController.text = userData['gender'] ?? '';
           _phoneNumberController.text = userData['phoneNumber'] ?? '';
+          _profileAboutController.text = userData['profileAbout'] ?? '';
+          _jobTitleController.text = userData['jobTitle'] ?? '';
         });
       }
     } catch (error) {
@@ -279,6 +283,14 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                     Padding(
                                       padding: EdgeInsets.only(bottom: 15),
                                       child: _buildGenderField(),
+                                    ),
+                                    Padding(
+                                      padding: EdgeInsets.only(bottom: 15),
+                                      child: _buildprofileAboutField(),
+                                    ),
+                                    Padding(
+                                      padding: EdgeInsets.only(bottom: 15),
+                                      child: _buildjobTitleField(),
                                     ),
                                     Center(
                                       child: ElevatedButton(
@@ -687,6 +699,114 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     );
   }
 
+  Widget _buildprofileAboutField() {
+    return SizedBox(
+      height: 71,
+      width: 350,
+      child: Container(
+        decoration: BoxDecoration(
+          color: Colors.white,
+          border: Border.all(color: Color(0xFFE0E2E9)),
+          borderRadius: BorderRadius.circular(8.0),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.1),
+              spreadRadius: 1,
+              blurRadius: 5,
+              offset: Offset(0, 3),
+            ),
+          ],
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              ' Bio',
+              style: TextStyle(
+                fontSize: 15.0,
+                fontWeight: FontWeight.bold,
+                fontFamily: 'Sk-Modernist',
+              ),
+            ),
+            TextFormField(
+              controller: _profileAboutController,
+              decoration: InputDecoration(
+                hintText: 'Enter your profile about',
+                contentPadding: EdgeInsets.all(10),
+                border: InputBorder.none,
+              ),
+              style: TextStyle(
+                  fontSize: 15.0,
+                  fontWeight: FontWeight.bold,
+                  fontFamily: 'Sk-Modernist',
+                  color: Colors.grey),
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Please enter your profile about';
+                }
+                return null;
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildjobTitleField() {
+    return SizedBox(
+      height: 71,
+      width: 350,
+      child: Container(
+        decoration: BoxDecoration(
+          color: Colors.white,
+          border: Border.all(color: Color(0xFFE0E2E9)),
+          borderRadius: BorderRadius.circular(8.0),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.1),
+              spreadRadius: 1,
+              blurRadius: 5,
+              offset: Offset(0, 3),
+            ),
+          ],
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              ' Job Title',
+              style: TextStyle(
+                fontSize: 15.0,
+                fontWeight: FontWeight.bold,
+                fontFamily: 'Sk-Modernist',
+              ),
+            ),
+            TextFormField(
+              controller: _jobTitleController,
+              decoration: InputDecoration(
+                hintText: 'Enter your job title',
+                contentPadding: EdgeInsets.all(10),
+                border: InputBorder.none,
+              ),
+              style: TextStyle(
+                  fontSize: 15.0,
+                  fontWeight: FontWeight.bold,
+                  fontFamily: 'Sk-Modernist',
+                  color: Colors.grey),
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Please enter your job title';
+                }
+                return null;
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   void updateUserData() async {
     try {
       final currentUser = FirebaseAuth.instance.currentUser;
@@ -702,6 +822,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           'language': _languageController.text,
           'gender': _genderController.text,
           'phoneNumber': _phoneNumberController.text,
+          'profileAbout': _profileAboutController.text,
         });
         // Data updated successfully
         showDialog(
