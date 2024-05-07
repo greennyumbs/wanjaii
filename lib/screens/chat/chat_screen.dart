@@ -176,14 +176,18 @@ class _ChatScreenState extends State<ChatScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          'Messages',
-          style: TextStyle(
-            fontSize: 40.0,
-            fontWeight: FontWeight.bold,
-            fontFamily: 'Sk-Modernist',
+        title: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16.0),
+          child: Text(
+            'Messages',
+            style: TextStyle(
+              fontSize: 40.0,
+              fontWeight: FontWeight.bold,
+              fontFamily: 'Sk-Modernist',
+            ),
           ),
         ),
+        automaticallyImplyLeading: false,
       ),
       bottomNavigationBar: BottomNavBar(index: 2), // Removed const
       body: Container(
