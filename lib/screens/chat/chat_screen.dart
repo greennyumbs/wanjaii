@@ -30,25 +30,6 @@ class ChatScreen extends StatefulWidget {
   _ChatScreenState createState() => _ChatScreenState();
 }
 
-// class ChatScreen extends StatefulWidget {
-//   static const String routeName = '/chat';
-//   final User matchedUser; // Change from String to User
-//   const ChatScreen({Key? key, required this.matchedUser})
-//       : super(key: key); // Change parameter type
-
-//   static Route route({required User matchedUser}) {
-//     // Modified route method to accept User
-//     return MaterialPageRoute(
-//       builder: (_) =>
-//           ChatScreen(matchedUser: matchedUser), // Passing matchedUser
-//       settings: const RouteSettings(name: routeName),
-//     );
-//   }
-
-//   @override
-//   _ChatScreenState createState() => _ChatScreenState();
-// }
-
 class _ChatScreenState extends State<ChatScreen> {
   final firestoreService = FirestoreService();
   // final ChatServices _chatService = ChatServices();
@@ -194,24 +175,19 @@ class _ChatScreenState extends State<ChatScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // Wrap the content with Scaffold to use Material widgets
       appBar: AppBar(
-        automaticallyImplyLeading: false,
-        title: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Text(
-            'Messages',
-            style: TextStyle(
-              fontSize: 40.0,
-              fontWeight: FontWeight.bold,
-              fontFamily: 'Sk-Modernist',
-            ),
+        title: Text(
+          'Messages',
+          style: TextStyle(
+            fontSize: 40.0,
+            fontWeight: FontWeight.bold,
+            fontFamily: 'Sk-Modernist',
           ),
         ),
       ),
       bottomNavigationBar: BottomNavBar(index: 2), // Removed const
       body: Container(
-        padding: EdgeInsets.symmetric(horizontal: 16.0), // Removed const
+        padding: EdgeInsets.all(16.0), // Removed const
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
@@ -644,29 +620,6 @@ class _ChatTileState extends State<ChatTile> {
         width: 2, // Adjust the width of the line as needed
         color: Color(0xFFBB254A), // Set the color of the line to red
       ),
-    );
-  }
-}
-
-class ChatTile extends StatelessWidget {
-  final String name;
-  final String image;
-  final String message;
-
-  ChatTile({required this.name, required this.image, required this.message});
-
-  @override
-  Widget build(BuildContext context) {
-    return ListTile(
-      leading: CircleAvatar(
-        radius: 30.0,
-        backgroundImage: AssetImage(image),
-      ),
-      title: Text(name),
-      subtitle: Text(message),
-      onTap: () {
-        // Handle tapping on the chat tile
-      },
     );
   }
 }
