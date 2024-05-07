@@ -107,7 +107,7 @@ class _UserScreenState extends State<UserScreen> {
               await FirebaseAuth.instance.signOut();
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => const SignIn()),
+                MaterialPageRoute(builder: (context) => Create(title: "title")),
               );
               // Navigate to the login screen
             },

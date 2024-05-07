@@ -229,6 +229,26 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                   height: 30.0,
                                 ),
                                 Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 30.0),
+                                  child: Row(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        'Account Setting',
+                                        textAlign: TextAlign.left,
+                                        style: TextStyle(
+                                          fontSize: 22,
+                                          fontWeight: FontWeight.bold,
+                                          fontFamily: 'Sk-Modernist',
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                SizedBox(height: 10),
+                                Padding(
                                   padding: EdgeInsets.only(bottom: 15),
                                   child: _buildNameField(),
                                 ),
@@ -672,7 +692,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              ' Show Me',
+              ' Gender',
               style: TextStyle(
                 fontSize: 15.0,
                 fontWeight: FontWeight.bold,
@@ -740,12 +760,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   fontWeight: FontWeight.bold,
                   fontFamily: 'Sk-Modernist',
                   color: Colors.grey),
-              validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return 'Please enter your profile about';
-                }
-                return null;
-              },
             ),
           ],
         ),
@@ -794,12 +808,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   fontWeight: FontWeight.bold,
                   fontFamily: 'Sk-Modernist',
                   color: Colors.grey),
-              validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return 'Please enter your job title';
-                }
-                return null;
-              },
             ),
           ],
         ),
@@ -823,6 +831,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           'gender': _genderController.text,
           'phoneNumber': _phoneNumberController.text,
           'profileAbout': _profileAboutController.text,
+          'jobTitle': _jobTitleController.text,
         });
         // Data updated successfully
         showDialog(
