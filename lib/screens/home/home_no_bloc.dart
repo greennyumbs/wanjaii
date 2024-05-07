@@ -4,6 +4,8 @@ import 'package:firebase_auth/firebase_auth.dart' hide User;
 import 'package:flutter/material.dart';
 import 'package:flutter_dating_app/screens/home/match.dart';
 import 'package:flutter_dating_app/screens/home/profile_screen.dart';
+import 'package:flutter_dating_app/screens/onboarding/onboarding_screens/picture_screen.dart';
+import 'package:flutter_dating_app/screens/onboarding/onbroading_screen.dart';
 import 'package:flutter_dating_app/widgets/app_bar.dart';
 import 'package:flutter_dating_app/widgets/bottom_nav_bar.dart';
 import 'package:flutter_dating_app/widgets/choice_button.dart';
@@ -13,7 +15,7 @@ import 'package:http/http.dart' as http;
 import '../../models/user_model.dart';
 
 //const ip = '192.168.100.107'; //POOHPOOM
-const ip = '192.168.1.39'; //My home
+const ip = '192.168.0.164'; //My home
 //const ip = '172.20.10.2'; //My home
 
 class HomeScreen extends StatefulWidget {
@@ -427,6 +429,24 @@ class _HomeScreenState extends State<HomeScreen> {
                         color: Color.fromRGBO(138, 35, 135, 1),
                         icon: Icons.star,
                       ),
+                      // TextButton(
+                      //   child: const Text(
+                      //     'Cancel',
+                      //     style: TextStyle(
+                      //       fontSize: 19,
+                      //       fontFamily: 'Sk-Modernist',
+                      //       color: Color(0xFFBB254A),
+                      //     ),
+                      //   ),
+                      //   onPressed: () {
+                      //     Navigator.push(
+                      //       context,
+                      //       MaterialPageRoute(
+                      //           builder: (context) => const ProfileSetupScreen(
+                      //               tabController: widget.tapco)),
+                      //     );
+                      //   },
+                      // ),
                     ],
                   ),
                 ),

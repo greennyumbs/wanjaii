@@ -66,9 +66,60 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
   int get age => DateTime.now().year - _selectedDate.year;
 
   Future<void> _uploadData(String imagePath) async {
+    void errorMessagePopup(String message) {
+      // print('Sign In button pressed');
+      showDialog(
+          context: context,
+          builder: (context) {
+            return AlertDialog(
+                title: const Text(
+                  "ERROR",
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontFamily: 'Sk-Modernist',
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black,
+                  ),
+                ),
+                content: Text(
+                  message,
+                  style: const TextStyle(
+                    fontSize: 19,
+                    fontFamily: 'Sk-Modernist',
+                    color: Colors.black,
+                  ),
+                ),
+                actions: <Widget>[
+                  TextButton(
+                    child: const Text(
+                      'Cancel',
+                      style: TextStyle(
+                        fontSize: 19,
+                        fontFamily: 'Sk-Modernist',
+                        color: Color(0xFFBB254A),
+                      ),
+                    ),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                ]);
+          });
+    }
+
     final file = File(imagePath);
-    if (imagePath == null || _firstName.isEmpty || _lastName.isEmpty) {
-      return; // Show error message if data is missing
+    // if (imagePath == null || _firstName.isEmpty || _lastName.isEmpty) {
+    //   return; // Show error message if data is missing
+    // }
+    if (imagePath.isEmpty) {
+      errorMessagePopup("No picture added");
+    }
+    if (_firstName.isEmpty) {
+      errorMessagePopup("Enter your first name");
+    }
+
+    if (_lastName.isEmpty) {
+      errorMessagePopup("Enter your last name");
     }
 
     final ref = FirebaseStorage.instance
@@ -97,20 +148,68 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
 
   void _handleUpload() async {
     final user = FirebaseAuth.instance.currentUser;
-    final userData = {
-      'name': fullName,
-      'age': age,
-      'email': user?.email,
-    };
-    await FirebaseFirestore.instance
-        .collection('users')
-        .doc(user?.uid)
-        .update(userData);
+    if (age >= 18 && age <= 50) {
+      final userData = {
+        'name': fullName,
+        'age': age,
+        'email': user?.email,
+      };
+      try {
+        await FirebaseFirestore.instance
+            .collection('users')
+            .doc(user?.uid)
+            .update(userData);
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => HomeScreen()),
+        );
+      } catch (e) {
+        print("age is not in range of 18 to 50");
+      }
+    } else {
+      void errorMessagePopup(String message) {
+        // print('Sign In button pressed');
+        showDialog(
+            context: context,
+            builder: (context) {
+              return AlertDialog(
+                  title: const Text(
+                    "ERROR",
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontFamily: 'Sk-Modernist',
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black,
+                    ),
+                  ),
+                  content: Text(
+                    message,
+                    style: const TextStyle(
+                      fontSize: 19,
+                      fontFamily: 'Sk-Modernist',
+                      color: Colors.black,
+                    ),
+                  ),
+                  actions: <Widget>[
+                    TextButton(
+                      child: const Text(
+                        'Cancel',
+                        style: TextStyle(
+                          fontSize: 19,
+                          fontFamily: 'Sk-Modernist',
+                          color: Color(0xFFBB254A),
+                        ),
+                      ),
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                    ),
+                  ]);
+            });
+      }
 
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(builder: (context) => HomeScreen()),
-    );
+      errorMessagePopup("Age is not in range of 18 to 50");
+    }
   }
 
   @override
@@ -136,25 +235,25 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
                 },
               ),
             ),
-            actions: [
-              TextButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => const HomeScreen()),
-                  );
-                },
-                child: const Text(
-                  'Skip',
-                  style: TextStyle(
-                    color: Color(0xFFE94057),
-                    fontSize: 18,
-                    fontFamily: 'Sk-Modernist',
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-              ),
-            ],
+            // actions: [
+            //   TextButton(
+            //     onPressed: () {
+            //       Navigator.push(
+            //         context,
+            //         MaterialPageRoute(builder: (context) => const HomeScreen()),
+            //       );
+            //     },
+            //     child: const Text(
+            //       'Skip',
+            //       style: TextStyle(
+            //         color: Color(0xFFE94057),
+            //         fontSize: 18,
+            //         fontFamily: 'Sk-Modernist',
+            //         fontWeight: FontWeight.w600,
+            //       ),
+            //     ),
+            //   ),
+            // ],
           ),
         ),
       ),
@@ -194,7 +293,7 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
                                   image: NetworkImage(_imageUrls!),
                                   fit: BoxFit.cover,
                                 )
-                              : DecorationImage(
+                              : const DecorationImage(
                                   image: AssetImage(
                                           'assets/images/profile_placeholder.png')
                                       as ImageProvider,
@@ -207,7 +306,7 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
                                 width: 39,
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(30),
-                                  color: Color(0xFFBB254A),
+                                  color: const Color(0xFFBB254A),
                                 ),
                                 child: IconButton(
                                   icon: const Icon(Icons.photo_camera),
@@ -232,7 +331,7 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
                     ),
                   ),
 
-                  SizedBox(height: 60.0),
+                  const SizedBox(height: 60.0),
                   // First Name
                   TextFormField(
                     onChanged: (value) {
@@ -242,7 +341,7 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
                     },
                     decoration: InputDecoration(
                       labelText: 'First Name',
-                      labelStyle: TextStyle(
+                      labelStyle: const TextStyle(
                         color: Colors.black45,
                       ),
                       border: OutlineInputBorder(
@@ -250,14 +349,14 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
                       ),
                       focusedBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(15.0),
-                          borderSide: BorderSide(color: Colors.black45)),
+                          borderSide: const BorderSide(color: Colors.black45)),
                       enabledBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(15.0),
                         borderSide: const BorderSide(color: Colors.black12),
                       ),
                     ),
                   ),
-                  SizedBox(height: 15.0),
+                  const SizedBox(height: 15.0),
                   // Last Name
                   TextFormField(
                     onChanged: (value) {
@@ -267,23 +366,23 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
                     },
                     decoration: InputDecoration(
                       labelText: 'Last Name',
-                      labelStyle: TextStyle(
+                      labelStyle: const TextStyle(
                         color: Colors.black45,
                       ),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(15.0),
-                        borderSide: BorderSide(color: Colors.black12),
+                        borderSide: const BorderSide(color: Colors.black12),
                       ),
                       focusedBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(15.0),
-                          borderSide: BorderSide(color: Colors.black45)),
+                          borderSide: const BorderSide(color: Colors.black45)),
                       enabledBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(15.0),
                         borderSide: const BorderSide(color: Colors.black12),
                       ),
                     ),
                   ),
-                  SizedBox(height: 15.0),
+                  const SizedBox(height: 15.0),
                   GestureDetector(
                     onTap: () async {
                       final DateTime? picked = await showDatePicker(
@@ -294,12 +393,12 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
                         builder: (BuildContext context, Widget? child) {
                           return Theme(
                             data: ThemeData.light().copyWith(
-                              colorScheme: ColorScheme.light(
-                                primary: const Color(
+                              colorScheme: const ColorScheme.light(
+                                primary: Color(
                                     0xFFBB254A), // Change the primary color as needed
                                 onPrimary: Colors.white,
                               ),
-                              buttonTheme: ButtonThemeData(
+                              buttonTheme: const ButtonThemeData(
                                 textTheme: ButtonTextTheme.primary,
                               ),
                             ),
@@ -316,9 +415,9 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
                     child: AbsorbPointer(
                       child: TextFormField(
                         decoration: InputDecoration(
-                          fillColor: Color(0xFFf8e9ed),
+                          fillColor: const Color(0xFFf8e9ed),
                           filled: true,
-                          prefixIcon: Icon(Icons.calendar_today),
+                          prefixIcon: const Icon(Icons.calendar_today),
                           prefixIconColor: Color(0xFFBB254A),
                           labelText: 'Choose birthday date',
                           labelStyle: TextStyle(

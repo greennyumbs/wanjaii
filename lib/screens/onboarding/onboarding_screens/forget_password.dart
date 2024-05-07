@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dating_app/screens/onboarding/onboarding_screens/signin.dart';
 
 class ForgetPasswordPage extends StatefulWidget {
   const ForgetPasswordPage({super.key});
@@ -46,6 +47,10 @@ class _ForgetPasswordPageState extends State<ForgetPasswordPage> {
                   ),
                   onPressed: () {
                     Navigator.of(context).pop();
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => const SignIn()),
+                    );
                   },
                 ),
               ]);
