@@ -23,6 +23,10 @@ class StartOnboarding extends OnboardingEvent {
       country: '',
       state: '',
       profileAbout: '',
+      email: '',
+      dob: '',
+      phoneNumber: '',
+      language: '',
     ),
   });
 

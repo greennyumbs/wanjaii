@@ -54,6 +54,7 @@ dependencies:
   toggle_switch: ^2.3.0
   readmore: ^3.0.0
   google_maps_flutter: ^2.6.1
+  insta_image_viewer: ^1.0.4
 
 dev_dependencies:
   flutter_test:
@@ -89,6 +90,7 @@ flutter:
   - assets/images/girl3.png
   - assets/images/girl4.jpg
   - assets/images/profile_placeholder.png
+  - assets/images/password.png
 
   fonts:
      - family: Sk-Modernist

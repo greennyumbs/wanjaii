@@ -65,28 +65,79 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
   String get fullName => '$_firstName $_lastName';
   int get age => DateTime.now().year - _selectedDate.year;
 
-  Future<void> _uploadData(String imagePath) async {
-    final file = File(imagePath);
-    if (imagePath == null || _firstName.isEmpty || _lastName.isEmpty) {
-      return; // Show error message if data is missing
-    }
+  // Future<void> _uploadData(String imagePath) async {
+  //   void errorMessagePopup(String message) {
+  //     // print('Sign In button pressed');
+  //     showDialog(
+  //         context: context,
+  //         builder: (context) {
+  //           return AlertDialog(
+  //               title: const Text(
+  //                 "ERROR",
+  //                 style: TextStyle(
+  //                   fontSize: 20,
+  //                   fontFamily: 'Sk-Modernist',
+  //                   fontWeight: FontWeight.bold,
+  //                   color: Colors.black,
+  //                 ),
+  //               ),
+  //               content: Text(
+  //                 message,
+  //                 style: const TextStyle(
+  //                   fontSize: 19,
+  //                   fontFamily: 'Sk-Modernist',
+  //                   color: Colors.black,
+  //                 ),
+  //               ),
+  //               actions: <Widget>[
+  //                 TextButton(
+  //                   child: const Text(
+  //                     'Cancel',
+  //                     style: TextStyle(
+  //                       fontSize: 19,
+  //                       fontFamily: 'Sk-Modernist',
+  //                       color: Color(0xFFBB254A),
+  //                     ),
+  //                   ),
+  //                   onPressed: () {
+  //                     Navigator.of(context).pop();
+  //                   },
+  //                 ),
+  //               ]);
+  //         });
+  //   }
 
-    final ref = FirebaseStorage.instance
-        .ref()
-        .child('user_images/${DateTime.now().millisecondsSinceEpoch}.jpg');
-    final uploadTask = ref.putFile(file);
-    final snapshot = await uploadTask.whenComplete(() {});
-    final imageUrls = await snapshot.ref.getDownloadURL();
+  //   final file = File(imagePath);
+  //   // if (imagePath == null || _firstName.isEmpty || _lastName.isEmpty) {
+  //   //   return; // Show error message if data is missing
+  //   // }
+  //   if (imagePath == "") {
+  //     errorMessagePopup("No picture added");
+  //   }
+  //   if (_firstName.isEmpty) {
+  //     errorMessagePopup("Enter your first name");
+  //   }
 
-    final user = FirebaseAuth.instance.currentUser;
-    final userData = {
-      'imageUrls': imageUrls,
-    };
-    await FirebaseFirestore.instance
-        .collection('users')
-        .doc(user?.uid)
-        .update(userData);
-  }
+  //   if (_lastName.isEmpty) {
+  //     errorMessagePopup("Enter your last name");
+  //   }
+
+  //   final ref = FirebaseStorage.instance
+  //       .ref()
+  //       .child('user_images/${DateTime.now().millisecondsSinceEpoch}.jpg');
+  //   final uploadTask = ref.putFile(file);
+  //   final snapshot = await uploadTask.whenComplete(() {});
+  //   final imageUrls = await snapshot.ref.getDownloadURL();
+
+  //   final user = FirebaseAuth.instance.currentUser;
+  //   final userData = {
+  //     'imageUrls': imageUrls,
+  //   };
+  //   await FirebaseFirestore.instance
+  //       .collection('users')
+  //       .doc(user?.uid)
+  //       .update(userData);
+  // }
 
   Future<void> _fetchUserData() async {
     final userData = await UserService().getUserData();
@@ -95,24 +146,100 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
     setState(() {});
   }
 
-  void _handleUpload() async {
-    final user = FirebaseAuth.instance.currentUser;
-    final userData = {
-      'name': fullName,
-      'age': age,
-      'email': user?.email,
-    };
-    await FirebaseFirestore.instance
-        .collection('users')
-        .doc(user?.uid)
-        .update(userData);
+  void _handleUpload(
+      int age, String _firstName, String _lastName, String? imagePath) async {
+    // print("this is imagepath");
+    // print(imagePath);
+    void errorMessagePopup(String message) {
+      // print('Sign In button pressed');
+      showDialog(
+          context: context,
+          builder: (context) {
+            return AlertDialog(
+                title: const Text(
+                  "ERROR",
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontFamily: 'Sk-Modernist',
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black,
+                  ),
+                ),
+                content: Text(
+                  message,
+                  style: const TextStyle(
+                    fontSize: 19,
+                    fontFamily: 'Sk-Modernist',
+                    color: Colors.black,
+                  ),
+                ),
+                actions: <Widget>[
+                  TextButton(
+                    child: const Text(
+                      'Cancel',
+                      style: TextStyle(
+                        fontSize: 19,
+                        fontFamily: 'Sk-Modernist',
+                        color: Color(0xFFBB254A),
+                      ),
+                    ),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                ]);
+          });
+    }
 
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(builder: (context) => HomeScreen()),
-    );
+    final user = FirebaseAuth.instance.currentUser;
+    if (_firstName == "" || _lastName == "") {
+      errorMessagePopup("Some field is empty.");
+      if (_firstName == "") {
+        setState(() {
+          _firstNameError = _firstName == "";
+        });
+      }
+      if (_lastName == "") {
+        setState(() {
+          _lastNameError = _lastName == "";
+        });
+      }
+    } else {
+      if (imagePath == null) {
+        errorMessagePopup("Please Add your image.");
+        setState(() {
+          _imageError = imagePath == "";
+          // _lastNameError = _lastName == "";
+        });
+      } else {
+        if (age >= 18 && age <= 50) {
+          final userData = {
+            'name': fullName,
+            'age': age,
+            'email': user?.email,
+          };
+          try {
+            await FirebaseFirestore.instance
+                .collection('users')
+                .doc(user?.uid)
+                .update(userData);
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => HomeScreen()),
+            );
+          } catch (e) {
+            print("age is not in range of 18 to 50");
+          }
+        } else {
+          errorMessagePopup("Age is not in range of 18 to 50");
+        }
+      }
+    }
   }
 
+  bool _firstNameError = false;
+  bool _lastNameError = false;
+  bool _imageError = false;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -136,23 +263,25 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
                 },
               ),
             ),
-            actions: [
-              TextButton(
-                onPressed: () {
-                  widget.tabController
-                      .animateTo(widget.tabController.index + 1);
-                },
-                child: const Text(
-                  'Skip',
-                  style: TextStyle(
-                    color: Color(0xFFE94057),
-                    fontSize: 18,
-                    fontFamily: 'Sk-Modernist',
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-              ),
-            ],
+            // actions: [
+            //   TextButton(
+            //     onPressed: () {
+            //       Navigator.push(
+            //         context,
+            //         MaterialPageRoute(builder: (context) => const HomeScreen()),
+            //       );
+            //     },
+            //     child: const Text(
+            //       'Skip',
+            //       style: TextStyle(
+            //         color: Color(0xFFE94057),
+            //         fontSize: 18,
+            //         fontFamily: 'Sk-Modernist',
+            //         fontWeight: FontWeight.w600,
+            //       ),
+            //     ),
+            //   ),
+            // ],
           ),
         ),
       ),
@@ -192,7 +321,7 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
                                   image: NetworkImage(_imageUrls!),
                                   fit: BoxFit.cover,
                                 )
-                              : DecorationImage(
+                              : const DecorationImage(
                                   image: AssetImage(
                                           'assets/images/profile_placeholder.png')
                                       as ImageProvider,
@@ -205,7 +334,7 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
                                 width: 39,
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(30),
-                                  color: Color(0xFFBB254A),
+                                  color: const Color(0xFFBB254A),
                                 ),
                                 child: IconButton(
                                   icon: const Icon(Icons.photo_camera),
@@ -230,58 +359,90 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
                     ),
                   ),
 
-                  SizedBox(height: 60.0),
+                  const SizedBox(height: 60.0),
                   // First Name
                   TextFormField(
                     onChanged: (value) {
                       setState(() {
                         _firstName = value;
+                        _firstNameError = false; // Reset error when typing
                       });
                     },
                     decoration: InputDecoration(
                       labelText: 'First Name',
-                      labelStyle: TextStyle(
+                      labelStyle: const TextStyle(
                         color: Colors.black45,
                       ),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(15.0),
+                        borderSide: BorderSide(
+                          color: _firstNameError
+                              ? const Color(0xFFBB254A)
+                              : Colors
+                                  .black12, // Change border color to red if there's an error
+                        ),
                       ),
                       focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(15.0),
-                          borderSide: BorderSide(color: Colors.black45)),
+                        borderRadius: BorderRadius.circular(15.0),
+                        borderSide: BorderSide(
+                          color: _firstNameError
+                              ? const Color(0xFFBB254A)
+                              : Colors.black45,
+                        ),
+                      ),
                       enabledBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(15.0),
-                        borderSide: const BorderSide(color: Colors.black12),
+                        borderSide: BorderSide(
+                          color: _firstNameError
+                              ? const Color(0xFFBB254A)
+                              : Colors.black12,
+                        ),
                       ),
                     ),
                   ),
-                  SizedBox(height: 15.0),
+                  const SizedBox(height: 15.0),
                   // Last Name
                   TextFormField(
                     onChanged: (value) {
                       setState(() {
                         _lastName = value;
+                        _lastNameError = false; // Reset error when typing
                       });
                     },
                     decoration: InputDecoration(
                       labelText: 'Last Name',
-                      labelStyle: TextStyle(
+                      labelStyle: const TextStyle(
                         color: Colors.black45,
                       ),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(15.0),
-                        borderSide: BorderSide(color: Colors.black12),
+                        borderSide: BorderSide(
+                          color: _lastNameError
+                              ? const Color(0xFFBB254A)
+                              : Colors
+                                  .black12, // Change border color to red if there's an error
+                        ),
                       ),
                       focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(15.0),
-                          borderSide: BorderSide(color: Colors.black45)),
+                        borderRadius: BorderRadius.circular(15.0),
+                        borderSide: BorderSide(
+                          color: _lastNameError
+                              ? const Color(0xFFBB254A)
+                              : Colors.black45,
+                        ),
+                      ),
                       enabledBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(15.0),
-                        borderSide: const BorderSide(color: Colors.black12),
+                        borderSide: BorderSide(
+                          color: _lastNameError
+                              ? const Color(0xFFBB254A)
+                              : Colors.black12,
+                        ),
                       ),
                     ),
                   ),
-                  SizedBox(height: 15.0),
+
+                  const SizedBox(height: 15.0),
                   GestureDetector(
                     onTap: () async {
                       final DateTime? picked = await showDatePicker(
@@ -292,12 +453,12 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
                         builder: (BuildContext context, Widget? child) {
                           return Theme(
                             data: ThemeData.light().copyWith(
-                              colorScheme: ColorScheme.light(
-                                primary: const Color(
+                              colorScheme: const ColorScheme.light(
+                                primary: Color(
                                     0xFFBB254A), // Change the primary color as needed
                                 onPrimary: Colors.white,
                               ),
-                              buttonTheme: ButtonThemeData(
+                              buttonTheme: const ButtonThemeData(
                                 textTheme: ButtonTextTheme.primary,
                               ),
                             ),
@@ -314,9 +475,9 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
                     child: AbsorbPointer(
                       child: TextFormField(
                         decoration: InputDecoration(
-                          fillColor: Color(0xFFf8e9ed),
+                          fillColor: const Color(0xFFf8e9ed),
                           filled: true,
-                          prefixIcon: Icon(Icons.calendar_today),
+                          prefixIcon: const Icon(Icons.calendar_today),
                           prefixIconColor: Color(0xFFBB254A),
                           labelText: 'Choose birthday date',
                           labelStyle: TextStyle(
@@ -347,7 +508,8 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
               ),
               SizedBox(height: 110.0),
               ElevatedButton(
-                  onPressed: _handleUpload,
+                  onPressed: () =>
+                      {_handleUpload(age, _firstName, _lastName, _imageUrls)},
                   style: ButtonStyle(
                     backgroundColor: MaterialStateProperty.all<Color>(
                         const Color(0xFFBB254A)), // Change button color

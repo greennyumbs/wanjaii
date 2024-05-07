@@ -124,6 +124,7 @@ class _FiltersScreenState extends State<FiltersScreen> {
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                 ),
               ),
+
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Row(
@@ -152,41 +153,44 @@ class _FiltersScreenState extends State<FiltersScreen> {
                   ],
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.all(35.0),
-                child: Container(
-                  decoration: BoxDecoration(
-                    border: Border.all(color: Colors.grey),
-                    borderRadius: BorderRadius.circular(8.0),
-                  ),
-                  child: DropdownButtonFormField<String>(
-                    value: _selectedLocation,
-                    decoration: InputDecoration(
-                      labelText: 'Location',
-                      labelStyle: TextStyle(color: Colors.grey),
-                      hintText: 'Select a location',
-                      border: InputBorder.none,
-                      contentPadding: EdgeInsets.symmetric(horizontal: 16.0),
-                    ),
-                    items: [
-                      'select a location',
-                      'Bangkok',
-                      'Pattaya',
-                      'Ayutthaya'
-                    ].map((String value) {
-                      return DropdownMenuItem<String>(
-                        value: value,
-                        child: Text(value),
-                      );
-                    }).toList(),
-                    onChanged: (String? newValue) {
-                      setState(() {
-                        _selectedLocation = newValue;
-                      });
-                    },
-                  ),
-                ),
+              const SizedBox(
+                height: 20.0,
               ),
+              // Padding(
+              //   padding: const EdgeInsets.all(35.0),
+              //   child: Container(
+              //     decoration: BoxDecoration(
+              //       border: Border.all(color: Colors.grey),
+              //       borderRadius: BorderRadius.circular(8.0),
+              //     ),
+              //     child: DropdownButtonFormField<String>(
+              //       value: _selectedLocation,
+              //       decoration: InputDecoration(
+              //         labelText: 'Location',
+              //         labelStyle: TextStyle(color: Colors.grey),
+              //         hintText: 'Select a location',
+              //         border: InputBorder.none,
+              //         contentPadding: EdgeInsets.symmetric(horizontal: 16.0),
+              //       ),
+              //       items: [
+              //         'select a location',
+              //         'Bangkok',
+              //         'Pattaya',
+              //         'Ayutthaya'
+              //       ].map((String value) {
+              //         return DropdownMenuItem<String>(
+              //           value: value,
+              //           child: Text(value),
+              //         );
+              //       }).toList(),
+              //       onChanged: (String? newValue) {
+              //         setState(() {
+              //           _selectedLocation = newValue;
+              //         });
+              //       },
+              //     ),
+              //   ),
+              // ),
               Padding(
                 padding: const EdgeInsets.only(left: 35.0),
                 child: Row(
@@ -239,7 +243,7 @@ class _FiltersScreenState extends State<FiltersScreen> {
                 ),
               ),
               const SizedBox(
-                height: 150,
+                height: 40,
               ),
               Center(
                 child: ElevatedButton(

@@ -18,13 +18,13 @@ class CustomButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 295,
-      height: 56,
-      decoration: BoxDecoration(
-        color: Theme.of(context).primaryColor,
-        borderRadius: BorderRadius.circular(15),
-      ),
-      child: ElevatedButton(
+        width: 295,
+        height: 56,
+        decoration: BoxDecoration(
+          color: Theme.of(context).primaryColor,
+          borderRadius: BorderRadius.circular(15),
+        ),
+        child: ElevatedButton(
           style: ElevatedButton.styleFrom(
             elevation: 0,
             backgroundColor: Colors.transparent,
@@ -43,17 +43,18 @@ class CustomButton extends StatelessWidget {
             }
           },
           child: Container(
-            width: double.infinity,
-            child: Center(
-              child: Text(
-                text,
-                style: const TextStyle(
-                    fontWeight: FontWeight.w500,
-                    color: Colors.white,
-                    fontSize: 16),
-              ),
-            ),
-          )),
-    );
+              width: double.infinity,
+              child: Center(
+                child: Text(
+                  text,
+                  style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    fontFamily: 'Sk-Modernist',
+                    color: Color(0xFFFFFFFF),
+                  ),
+                ),
+              )),
+        ));
   }
 }

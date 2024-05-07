@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_dating_app/models/user_model.dart';
 import 'package:flutter_dating_app/widgets/widgets.dart';
+import 'package:insta_image_viewer/insta_image_viewer.dart';
 import 'package:readmore/readmore.dart';
 
 class ProfileScreen extends StatelessWidget {
@@ -306,13 +307,15 @@ class ProfileScreen extends StatelessWidget {
                       //fit: StackFit.expand,
                       children: [
                         Positioned.fill(
-                          child: Container(
-                            decoration: BoxDecoration(
-                              image: DecorationImage(
-                                fit: BoxFit.cover,
-                                image: NetworkImage(user.imageUrls),
+                          child: InstaImageViewer(
+                            child: Container(
+                              decoration: BoxDecoration(
+                                image: DecorationImage(
+                                  fit: BoxFit.cover,
+                                  image: NetworkImage(user.imageUrls),
+                                ),
+                                borderRadius: BorderRadius.circular(15),
                               ),
-                              borderRadius: BorderRadius.circular(15),
                             ),
                           ),
                         ),

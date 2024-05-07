@@ -80,23 +80,23 @@ class _InterestScreenState extends State<InterestScreen> {
                 },
               ),
             ),
-            actions: [
-              TextButton(
-                onPressed: () {
-                  widget.tabController
-                      .animateTo(widget.tabController.index + 1);
-                },
-                child: const Text(
-                  'Skip',
-                  style: TextStyle(
-                    color: Color(0xFFE94057),
-                    fontSize: 18,
-                    fontFamily: 'Sk-Modernist',
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-              ),
-            ],
+            // actions: [
+            //   TextButton(
+            //     onPressed: () {
+            //       widget.tabController
+            //           .animateTo(widget.tabController.index + 1);
+            //     },
+            //     child: const Text(
+            //       'Skip',
+            //       style: TextStyle(
+            //         color: Color(0xFFE94057),
+            //         fontSize: 18,
+            //         fontFamily: 'Sk-Modernist',
+            //         fontWeight: FontWeight.w600,
+            //       ),
+            //     ),
+            //   ),
+            // ],
           ),
         ),
       ),

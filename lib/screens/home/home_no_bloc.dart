@@ -4,6 +4,8 @@ import 'package:firebase_auth/firebase_auth.dart' hide User;
 import 'package:flutter/material.dart';
 import 'package:flutter_dating_app/screens/home/match.dart';
 import 'package:flutter_dating_app/screens/home/profile_screen.dart';
+import 'package:flutter_dating_app/screens/onboarding/onboarding_screens/picture_screen.dart';
+import 'package:flutter_dating_app/screens/onboarding/onbroading_screen.dart';
 import 'package:flutter_dating_app/widgets/app_bar.dart';
 import 'package:flutter_dating_app/widgets/bottom_nav_bar.dart';
 import 'package:flutter_dating_app/widgets/choice_button.dart';
@@ -13,7 +15,8 @@ import 'package:http/http.dart' as http;
 import '../../models/user_model.dart';
 
 //const ip = '192.168.100.107'; //POOHPOOM
-const ip = '192.168.1.39'; //My home
+const ip = '192.168.0.164'; //My home
+//const ip = '172.20.10.2'; //My home
 
 class HomeScreen extends StatefulWidget {
   static const String routeName = '/';
@@ -86,6 +89,7 @@ class _HomeScreenState extends State<HomeScreen> {
               .map<User>((userJson) => User.fromJson(userJson))
               .where((user) =>
                   !_swipedUsers.contains(user) &&
+                  !(_currentUser?.dislikedUsers.contains(user.uid) ?? false) &&
                   (user.uid != (_currentUser?.uid ?? '')) &&
                   !(_currentUser?.likedUsers.contains(user.uid) ?? false) &&
                   (_selectedGender.isEmpty || user.gender == _selectedGender) &&
@@ -156,13 +160,35 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
-  void _swipeLeft() {
+/*   void _swipeLeft() {
     setState(() {
       if (_users.isNotEmpty) {
         _swipedUsers.add(_users.removeAt(0));
       }
     });
     print('Swiped left');
+  } */
+
+  void _swipeLeft() {
+    if (_users.isNotEmpty) {
+      final dislikedUser = _users.removeAt(0);
+      _swipedUsers.add(dislikedUser);
+      if (dislikedUser.uid != null && _currentUser?.uid != null) {
+        FirebaseFirestore.instance
+            .collection('users')
+            .doc(_currentUser!.uid)
+            .update({
+          'dislikedUsers': FieldValue.arrayUnion([dislikedUser.uid]),
+        });
+      }
+
+      // Update the _userCard with the next user in the list
+      if (_users.isNotEmpty) {
+        setState(() {
+          _userCard = UserCard(user: _users[0]);
+        });
+      }
+    }
   }
 
   void _swipeRight() async {
@@ -253,7 +279,7 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       appBar: CustomAppBar(
         title: 'Discover',
-        location: '(Location)',
+        location: '',
         onApplyFilters: _applyFilters,
         lastSelectedGender: _selectedGender, // Add this line
         lastSelectedLocation: _selectedLocation, // Add this line
@@ -328,7 +354,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 }
                               },
                               onDragEnd: (drag) {
-                                if (drag.velocity.pixelsPerSecond.dx < 0) {
+                                if (drag.offset.dx < 0) {
                                   _swipeLeft();
                                 } else {
                                   _swipeRight();
@@ -375,7 +401,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                 color: Colors.white,
                                               ),
                                               child: Icon(
-                                                Icons.favorite,
+                                                Icons.clear,
                                                 size: 60,
                                                 color: Color(0xFFBB254A),
                                               ),
@@ -426,6 +452,24 @@ class _HomeScreenState extends State<HomeScreen> {
                         color: Color.fromRGBO(138, 35, 135, 1),
                         icon: Icons.star,
                       ),
+                      // TextButton(
+                      //   child: const Text(
+                      //     'Cancel',
+                      //     style: TextStyle(
+                      //       fontSize: 19,
+                      //       fontFamily: 'Sk-Modernist',
+                      //       color: Color(0xFFBB254A),
+                      //     ),
+                      //   ),
+                      //   onPressed: () {
+                      //     Navigator.push(
+                      //       context,
+                      //       MaterialPageRoute(
+                      //           builder: (context) => const ProfileSetupScreen(
+                      //               tabController: widget.tapco)),
+                      //     );
+                      //   },
+                      // ),
                     ],
                   ),
                 ),

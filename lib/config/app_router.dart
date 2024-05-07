@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dating_app/models/models.dart';
 import 'package:flutter_dating_app/screens/home/home_no_bloc.dart';
 import 'package:flutter_dating_app/screens/screens.dart';
+import 'package:flutter_dating_app/screens/user/edit_profile.dart';
 import 'package:flutter_dating_app/services/auth_service.dart';
 
 class AppRouter {
@@ -22,6 +23,8 @@ class AppRouter {
 
       case UserScreen.routeName:
         return UserScreen.route();
+      case EditProfileScreen.routeName:
+        return EditProfileScreen.route();
       case ChatScreen.routeName:
         return ChatScreen.route();
       default:
