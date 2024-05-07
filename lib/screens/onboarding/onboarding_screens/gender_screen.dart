@@ -214,7 +214,7 @@ class _GenderSelectionScreenState extends State<GenderSelectionScreen> {
               ),
             ),
           ),
-          const SizedBox(height: 250.0),
+          const SizedBox(height: 100.0),
           CustomButton(
             tabController: widget.tabController,
             text: 'Continue',

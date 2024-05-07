@@ -86,7 +86,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
         isScrollControlled: true,
         builder: (BuildContext context) => SizedBox(
               // Set a maximum height to avoid exceeding device bounds
-              height: MediaQuery.of(context).size.height * 0.85,
+              height: MediaQuery.of(context).size.height * 0.5,
 
               child: FiltersScreen(
                 onApplyFilters: onApplyFilters,

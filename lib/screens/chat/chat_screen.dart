@@ -5,10 +5,10 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dating_app/screens/chat/individual_chat_page.dart';
-import 'package:flutter_dating_app/services/chat_service.dart';
 import 'package:flutter_dating_app/widgets/bottom_nav_bar.dart';
 import 'package:firebase_auth/firebase_auth.dart' hide User;
 import 'package:flutter_dating_app/services/firestore_service.dart';
+// import 'package:flutter_dating_app/screens/chat/chat_service.dart';
 // import 'package:http/http.dart' as http;
 
 class ChatScreen extends StatefulWidget {
@@ -32,9 +32,10 @@ class ChatScreen extends StatefulWidget {
 
 class _ChatScreenState extends State<ChatScreen> {
   final firestoreService = FirestoreService();
-  final ChatServices _chatService = ChatServices();
+  // final ChatServices _chatService = ChatServices();
   List<dynamic> _users = [];
   List<dynamic> _filteredMatches = [];
+  final _searchController = TextEditingController();
 
   @override
   void initState() {
@@ -46,6 +47,64 @@ class _ChatScreenState extends State<ChatScreen> {
   void didUpdateWidget(covariant ChatScreen oldWidget) {
     super.didUpdateWidget(oldWidget);
     _fetchData();
+    _filteredMatches = _users;
+  }
+
+  // void _filterUsers(String query) {
+  //   print("query: ${query.toLowerCase()}");
+
+  //   // Perform filtering
+  //   final filter = _users
+  //       .where((user) =>
+  //           (user.name as String).toLowerCase().contains(query.toLowerCase()))
+  //       .toList();
+  //   print("filter: $filter");
+
+  //   // Update filtered matches
+  //   setState(() {
+  //     _filteredMatches = filter;
+  //   });
+
+  //   print("_filteredMatches: $_filteredMatches");
+  // }
+  // void _filterUsers(String query) {
+  //   List<dynamic> filteredUsers = [];
+  //   print("query: $query");
+
+  //   for (var user in _users) {
+  //     if ((user.name as String).toLowerCase().contains(query.toLowerCase())) {
+  //       print("user: ${user.name}");
+  //       filteredUsers.add(user);
+  //     }
+  //   }
+  //   print("filteredUsers: $filteredUsers");
+  //   setState(() {
+  //     _filteredMatches = filteredUsers;
+  //   });
+  // }
+
+  List<dynamic> _filterUsers(String query) {
+    Set<dynamic> filteredUsers = {}; // Using Set to ensure uniqueness
+    print("query: $query");
+
+    for (var user in _users) {
+      if ((user.name as String).toLowerCase().contains(query.toLowerCase())) {
+        final userIn = (
+          uid: user.uid,
+          name: user.name,
+          imageUrls: user.imageUrls,
+          email: user.email,
+        );
+        print("user: ${userIn.name}");
+        filteredUsers.add(userIn); // Adding user to the set
+      }
+    }
+
+    List<dynamic> _filteredMatches =
+        filteredUsers.toList(); // Convert set back to list
+    print("_filteredMatches: $_filteredMatches");
+
+    return _filteredMatches;
   }
 
   Future<void> _fetchData() async {
@@ -83,6 +142,7 @@ class _ChatScreenState extends State<ChatScreen> {
               name: userDoc['name'],
               imageUrls: userDoc['imageUrls'],
               email: userDoc['email'],
+              // message: " "
             );
             userList.add(user);
           } else {
@@ -116,31 +176,22 @@ class _ChatScreenState extends State<ChatScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        toolbarHeight: 100,
-        //backgroundColor: Colors.transparent,
-        elevation: 0,
-        centerTitle: false,
         automaticallyImplyLeading: false,
-        title: const Padding(
-          padding: EdgeInsets.fromLTRB(25, 0, 0, 0),
-          child: Column(
-            children: [
-              Text('Messages',
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontFamily: 'Sk-Modernist',
-                    fontWeight: FontWeight.w800,
-                    fontSize: 32,
-                  )),
-            ],
+        title: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Text(
+            'Messages',
+            style: TextStyle(
+              fontSize: 40.0,
+              fontWeight: FontWeight.bold,
+              fontFamily: 'Sk-Modernist',
+            ),
           ),
         ),
-
-        backgroundColor: Colors.white,
       ),
       bottomNavigationBar: BottomNavBar(index: 2), // Removed const
       body: Container(
-        padding: EdgeInsets.fromLTRB(16, 0, 16, 16), // Removed const
+        padding: EdgeInsets.symmetric(horizontal: 16.0), // Removed const
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
@@ -152,6 +203,12 @@ class _ChatScreenState extends State<ChatScreen> {
                     padding: const EdgeInsets.symmetric(
                         horizontal: 16.0, vertical: 1),
                     child: TextField(
+                      controller: _searchController,
+                      onChanged: (query) {
+                        setState(() {
+                          _filteredMatches = _filterUsers(query);
+                        });
+                      },
                       decoration: InputDecoration(
                         hintText: 'Search',
                         prefixIcon: Icon(Icons.search_rounded),
@@ -174,65 +231,126 @@ class _ChatScreenState extends State<ChatScreen> {
                 )
               ],
             ),
-
-            SizedBox(height: 16.0), // Removed const
-            Padding(
-              padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
-              child: Text(
-                'New Matches',
-                style: TextStyle(
-                  fontSize: 18.0,
-                  fontWeight: FontWeight.bold,
-                  fontFamily: 'Sk-Modernist',
-                ),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
-              child: SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: Row(
-                  children: _users
-                      .map((user) => Padding(
-                            padding: const EdgeInsets.all(
-                                8.0), // Adjust the padding as needed
-                            child: _buildChatUser(
-                              context,
-                              user.name,
-                              user.imageUrls, // Assuming imageUrls is a list, change this accordingly
-                              user.uid,
-                              user.email, // Assuming you have an email field in the User model
+            // Visibility(
+            //   visible: _searchController.text.isNotEmpty &&
+            //       _filteredMatches.isNotEmpty,
+            //   child: Expanded(
+            //     child: SingleChildScrollView(
+            //       scrollDirection: Axis.horizontal,
+            //       child: Row(
+            //         children: _filteredMatches
+            //             .map(
+            //               (user) => Padding(
+            //                 padding: const EdgeInsets.all(8.0),
+            //                 child: ChatTile(
+            //                   // context,
+            //                   name: user.name,
+            //                   message:
+            //                       " ", // Assuming this property exists in your tuple
+            //                   image: user.imageUrls,
+            //                   receiverEmail: user.email,
+            //                   receiverId: user.uid,
+            //                 ),
+            //               ),
+            //             )
+            //             .toList(),
+            //       ),
+            //     ),
+            //   ),
+            // ),
+            Visibility(
+              visible: _searchController.text.isNotEmpty &&
+                  _filteredMatches.isNotEmpty,
+              child: Expanded(
+                child: SingleChildScrollView(
+                  scrollDirection:
+                      Axis.vertical, // Set scroll direction to vertical
+                  child: Column(
+                    // Wrap Row with Column
+                    children: _filteredMatches
+                        .map(
+                          (user) => Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: ChatTile(
+                              // context,
+                              name: user.name,
+                              message: " ",
+                              image: user.imageUrls,
+                              receiverEmail: user.email,
+                              receiverId: user.uid,
                             ),
-                          ))
-                      .toList(),
+                          ),
+                        )
+                        .toList(),
+                  ),
                 ),
               ),
             ),
-            SizedBox(height: 16.0), // Removed const
-            Padding(
-              padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
-              child: Text(
-                'Messages',
-                style: TextStyle(
-                  fontSize: 20.0,
-                  fontWeight: FontWeight.bold,
-                  fontFamily: 'Sk-Modernist',
+            SizedBox(height: 16.0),
+            Visibility(
+              visible:
+                  _searchController.text.isNotEmpty && _filteredMatches.isEmpty,
+              child: Center(
+                child: Text(
+                  'No Match',
+                  style: TextStyle(
+                    fontSize: 15.0,
+                    fontWeight: FontWeight.normal,
+                    fontFamily: 'Sk-Modernist',
+                  ),
                 ),
               ),
             ),
-            Expanded(
-              child: Padding(
-                padding: const EdgeInsets.fromLTRB(5, 0, 5, 0),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    Expanded(
-                      child: _buildMessageList(context),
-                    ),
-                  ],
+
+            if (_searchController.text.isEmpty)
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      SizedBox(height: 16.0),
+                      Text(
+                        'New Matches',
+                        style: TextStyle(
+                          fontSize: 18.0,
+                          fontWeight: FontWeight.bold,
+                          fontFamily: 'Sk-Modernist',
+                        ),
+                      ),
+                      SingleChildScrollView(
+                        scrollDirection: Axis.horizontal,
+                        child: Row(
+                          children: _users
+                              .map((user) => Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: _buildChatUser(
+                                      context,
+                                      user.name,
+                                      user.imageUrls,
+                                      user.uid,
+                                      user.email,
+                                    ),
+                                  ))
+                              .toList(),
+                        ),
+                      ),
+                      SizedBox(height: 16.0),
+                      Text(
+                        'Messages',
+                        style: TextStyle(
+                          fontSize: 20.0,
+                          fontWeight: FontWeight.bold,
+                          fontFamily: 'Sk-Modernist',
+                        ),
+                      ),
+                      Expanded(
+                        child: _buildMessageList(context),
+                      ),
+                    ],
+                  ),
                 ),
               ),
-            ),
           ],
         ),
       ),
@@ -244,7 +362,9 @@ class _ChatScreenState extends State<ChatScreen> {
       stream: FirebaseFirestore.instance.collection('matches').snapshots(),
       builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return CircularProgressIndicator(); // Display loading indicator while waiting for data
+          return const CircularProgressIndicator(
+            color: Color(0xFFBB254A),
+          ); // Display loading indicator while waiting for data
         }
         if (snapshot.hasError) {
           return Text(
@@ -273,7 +393,9 @@ class _ChatScreenState extends State<ChatScreen> {
                   .get(),
               builder: (context, userSnapshot) {
                 if (userSnapshot.connectionState == ConnectionState.waiting) {
-                  return CircularProgressIndicator(); // Display loading indicator while waiting for user data
+                  return const CircularProgressIndicator(
+                    color: Color(0xFFBB254A),
+                  ); // Display loading indicator while waiting for user data
                 }
                 if (userSnapshot.hasError) {
                   return Text(
@@ -314,7 +436,9 @@ class _ChatScreenState extends State<ChatScreen> {
                   builder: (context, messageSnapshot) {
                     if (messageSnapshot.connectionState ==
                         ConnectionState.waiting) {
-                      return CircularProgressIndicator(); // Display loading indicator while waiting for message data
+                      return const CircularProgressIndicator(
+                        color: Color(0xFFBB254A),
+                      ); // Display loading indicator while waiting for message data
                     }
                     if (messageSnapshot.hasError) {
                       return Text(

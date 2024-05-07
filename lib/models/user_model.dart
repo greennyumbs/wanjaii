@@ -15,6 +15,7 @@ class User extends Equatable {
   final String state;
   final String profileAbout;
   final List<String> likedUsers;
+  final List<String> dislikedUsers;
   final String email;
   final String dob;
   final String phoneNumber;
@@ -38,6 +39,7 @@ class User extends Equatable {
     required this.phoneNumber,
     required this.language,
     this.likedUsers = const [],
+    this.dislikedUsers = const [],
   });
 
   Map<String, dynamic> toMap() {
@@ -55,6 +57,7 @@ class User extends Equatable {
       "jobTitle": jobTitle,
       "interests": interests,
       "likedUsers": likedUsers,
+      "dislikedUsers": dislikedUsers,
       "email": email,
       "dob": dob,
       "phone": phoneNumber,
@@ -76,6 +79,7 @@ class User extends Equatable {
     String? state,
     String? profileAbout,
     List<String>? likedUsers,
+    List<String>? dislikedUsers,
     String? email,
     String? dob,
     String? phoneNumber,
@@ -95,6 +99,7 @@ class User extends Equatable {
       state: state ?? this.state,
       profileAbout: profileAbout ?? this.profileAbout,
       likedUsers: likedUsers ?? this.likedUsers,
+      dislikedUsers: dislikedUsers ?? this.dislikedUsers,
       email: email ?? this.email,
       dob: dob ?? this.dob,
       phoneNumber: phoneNumber ?? this.phoneNumber,
@@ -117,6 +122,7 @@ class User extends Equatable {
       state: data['state'] ?? '',
       profileAbout: data['profileAbout'] ?? '',
       likedUsers: List<String>.from(data['likedUsers'] ?? []),
+      dislikedUsers: List<String>.from(data['dislikedUsers'] ?? []),
       email: data['email'] ?? '',
       dob: data['dob'] ?? '',
       phoneNumber: data['phoneNumber'] ?? '',
@@ -139,6 +145,7 @@ class User extends Equatable {
         jobTitle,
         interests,
         likedUsers,
+        dislikedUsers,
         email,
         dob,
         phoneNumber,
@@ -155,6 +162,7 @@ class User extends Equatable {
       bio: snap['bio'],
       jobTitle: snap['jobTitle'],
       likedUsers: snap['likedUsers'],
+      dislikedUsers: snap['dislikedUsers'],
       interests: snap['interests'],
       city: snap['city'],
       country: snap['country'],
@@ -183,6 +191,7 @@ class User extends Equatable {
       state: json['state'] ?? '',
       profileAbout: json['profileAbout'] ?? '',
       likedUsers: List<String>.from(json['likedUsers'] ?? []),
+      dislikedUsers: List<String>.from(json['dislikedUsers'] ?? []),
       email: json['email'] ?? '',
       dob: json['dob'] ?? '',
       phoneNumber: json['phoneNumber'] ?? '',

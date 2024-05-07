@@ -89,6 +89,7 @@ class _HomeScreenState extends State<HomeScreen> {
               .map<User>((userJson) => User.fromJson(userJson))
               .where((user) =>
                   !_swipedUsers.contains(user) &&
+                  !(_currentUser?.dislikedUsers.contains(user.uid) ?? false) &&
                   (user.uid != (_currentUser?.uid ?? '')) &&
                   !(_currentUser?.likedUsers.contains(user.uid) ?? false) &&
                   (_selectedGender.isEmpty || user.gender == _selectedGender) &&
@@ -159,13 +160,35 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
-  void _swipeLeft() {
+/*   void _swipeLeft() {
     setState(() {
       if (_users.isNotEmpty) {
         _swipedUsers.add(_users.removeAt(0));
       }
     });
     print('Swiped left');
+  } */
+
+  void _swipeLeft() {
+    if (_users.isNotEmpty) {
+      final dislikedUser = _users.removeAt(0);
+      _swipedUsers.add(dislikedUser);
+      if (dislikedUser.uid != null && _currentUser?.uid != null) {
+        FirebaseFirestore.instance
+            .collection('users')
+            .doc(_currentUser!.uid)
+            .update({
+          'dislikedUsers': FieldValue.arrayUnion([dislikedUser.uid]),
+        });
+      }
+
+      // Update the _userCard with the next user in the list
+      if (_users.isNotEmpty) {
+        setState(() {
+          _userCard = UserCard(user: _users[0]);
+        });
+      }
+    }
   }
 
   void _swipeRight() async {
@@ -256,7 +279,7 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       appBar: CustomAppBar(
         title: 'Discover',
-        location: '(Location)',
+        location: '',
         onApplyFilters: _applyFilters,
         lastSelectedGender: _selectedGender, // Add this line
         lastSelectedLocation: _selectedLocation, // Add this line
