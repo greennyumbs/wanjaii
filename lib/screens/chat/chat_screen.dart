@@ -1,6 +1,7 @@
 // import 'dart:convert';
 // import 'package:cached_network_image/cached_network_image.dart';
 import 'dart:async';
+import 'package:intl/intl.dart';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -176,8 +177,9 @@ class _ChatScreenState extends State<ChatScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         title: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16.0),
+          padding: const EdgeInsets.all(16.0),
           child: Text(
             'Messages',
             style: TextStyle(
@@ -187,11 +189,10 @@ class _ChatScreenState extends State<ChatScreen> {
             ),
           ),
         ),
-        automaticallyImplyLeading: false,
       ),
       bottomNavigationBar: BottomNavBar(index: 2), // Removed const
       body: Container(
-        padding: EdgeInsets.all(16.0), // Removed const
+        padding: EdgeInsets.symmetric(horizontal: 16.0), // Removed const
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
@@ -278,6 +279,7 @@ class _ChatScreenState extends State<ChatScreen> {
                               image: user.imageUrls,
                               receiverEmail: user.email,
                               receiverId: user.uid,
+                              timestamp: Timestamp.now(),
                             ),
                           ),
                         )
@@ -372,115 +374,235 @@ class _ChatScreenState extends State<ChatScreen> {
         }
 
         final currentUserId = FirebaseAuth.instance.currentUser?.uid;
-        final matchedUserIds = <String>{};
+        final matchedUserIds = <String, dynamic>{};
 
         for (var doc in snapshot.data!.docs) {
           if (doc['user1'] == currentUserId) {
-            matchedUserIds.add(doc['user2']);
+            matchedUserIds[doc['user2']] = {
+              'user1': doc['user1'],
+              'user2': doc['user2']
+            };
           } else if (doc['user2'] == currentUserId) {
-            matchedUserIds.add(doc['user1']);
+            matchedUserIds[doc['user1']] = {
+              'user1': doc['user1'],
+              'user2': doc['user2']
+            };
+          }
+        }
+        print("matchedUserIds: $matchedUserIds");
+
+        // Fetch timestamps from chat_room collection
+        Future<void> fetchTimestamps() async {
+          for (var userId in matchedUserIds.keys) {
+            print("userId: $userId");
+            String user1 = matchedUserIds[userId]['user1'];
+            String user2 = matchedUserIds[userId]['user2'];
+            print("user1: $user1");
+            print("user2: $user2");
+
+            List<String> ids = [user1, user2];
+            ids.sort();
+            String chatRoomId = ids.join('_');
+            var querySnapshot = await FirebaseFirestore.instance
+                .collection('chat_room')
+                .doc(chatRoomId)
+                .collection('messages')
+                .orderBy('timestamp', descending: true)
+                .limit(1)
+                .get();
+            print("querySnapshot");
+
+            if (querySnapshot.docs.isNotEmpty) {
+              var latestMessageDoc = querySnapshot.docs.first;
+              print("latestMessageDoc data: ${latestMessageDoc.data()}");
+              matchedUserIds[userId]['timestamp'] =
+                  latestMessageDoc['timestamp'];
+              print(
+                  "matchedUserIds[userId]['timestamp']: ${matchedUserIds[userId]['timestamp']}");
+              matchedUserIds[userId]['message'] = latestMessageDoc['message'];
+            } else {
+              // Set default timestamp and message if no messages found
+              matchedUserIds[userId]['timestamp'] = null;
+              matchedUserIds[userId]['message'] = '';
+            }
+            print("NEW matchedUserIds: $matchedUserIds");
           }
         }
 
-        return ListView.builder(
-          itemCount: matchedUserIds.length,
-          itemBuilder: (context, index) {
-            final userId = matchedUserIds.elementAt(index);
-            return FutureBuilder<DocumentSnapshot>(
-              future: FirebaseFirestore.instance
-                  .collection('users')
-                  .doc(userId)
-                  .get(),
-              builder: (context, userSnapshot) {
-                if (userSnapshot.connectionState == ConnectionState.waiting) {
-                  return const CircularProgressIndicator(
-                    color: Color(0xFFBB254A),
-                  ); // Display loading indicator while waiting for user data
-                }
-                if (userSnapshot.hasError) {
-                  return Text(
-                      'Error: ${userSnapshot.error}'); // Display error message if there's an error
-                }
+        // Call fetchTimestamps() and build ChatTile widgets once timestamps are fetched
+        return FutureBuilder(
+          future: fetchTimestamps(),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const CircularProgressIndicator(
+                color: Color(0xFFBB254A),
+              ); // Display loading indicator while waiting for timestamps
+            }
 
-                final userData =
-                    userSnapshot.data!.data() as Map<String, dynamic>;
-                final userName = userData['name'];
-                final userImage = userData['imageUrls'] != null &&
-                        userData['imageUrls'].isNotEmpty
-                    ? userData['imageUrls']
-                    : Icons.person;
-// Null-aware access to imageUrls
-                print("userImage: $userImage");
+            // Sort matchedUserIds by timestamp of latest message
+            // Sort matchedUserIds by timestamp of latest message
+            // Filter out entries with null timestamps
+            var filteredUserIds = matchedUserIds.keys
+                .where((userId) => matchedUserIds[userId]['timestamp'] != null);
 
-                // Define function to fetch latest message
-                Stream<QuerySnapshot> getLatestMessageStream(
-                    String currentUserId, String otherUserId) {
-                  List<String> ids = [currentUserId, otherUserId];
-                  ids.sort();
-                  String chatRoomId = ids.join('_');
-                  return FirebaseFirestore.instance
-                      .collection("chat_room")
-                      .doc(chatRoomId)
-                      .collection("messages")
-                      .orderBy("timestamp", descending: true)
-                      .limit(1)
-                      .snapshots();
-                }
+// Sort filteredUserIds by timestamp of latest message
+            var sortedUserIds = filteredUserIds.toList()
+              ..sort((a, b) {
+                var timestampA = matchedUserIds[a]['timestamp'];
+                var timestampB = matchedUserIds[b]['timestamp'];
 
-                // Fetch latest message
-                var latestMessageStream =
-                    getLatestMessageStream(currentUserId!, userId);
+                // Compare timestamps
+                return timestampB!.compareTo(timestampA!);
+              });
 
-                return StreamBuilder<QuerySnapshot>(
-                  stream: latestMessageStream,
-                  builder: (context, messageSnapshot) {
-                    if (messageSnapshot.connectionState ==
+            print("sortedUserIds");
+            print(sortedUserIds);
+
+            return ListView.builder(
+              itemCount: sortedUserIds.length,
+              itemBuilder: (context, index) {
+                final userId = sortedUserIds[index];
+
+                // final userId = matchedUserIds.elementAt(index);
+                return FutureBuilder<DocumentSnapshot>(
+                  future: FirebaseFirestore.instance
+                      .collection('users')
+                      .doc(userId)
+                      .get(),
+                  builder: (context, userSnapshot) {
+                    if (userSnapshot.connectionState ==
                         ConnectionState.waiting) {
                       return const CircularProgressIndicator(
                         color: Color(0xFFBB254A),
-                      ); // Display loading indicator while waiting for message data
+                      ); // Display loading indicator while waiting for user data
                     }
-                    if (messageSnapshot.hasError) {
+                    if (userSnapshot.hasError) {
                       return Text(
-                          'Error: ${messageSnapshot.error}'); // Display error message if there's an error
+                          'Error: ${userSnapshot.error}'); // Display error message if there's an error
                     }
 
-                    // Retrieve message
-                    var messageDocs = messageSnapshot.data!.docs;
-                    if (messageDocs.isEmpty) {
-                      return SizedBox(); // Return an empty SizedBox if there's no message
+                    final userData =
+                        userSnapshot.data!.data() as Map<String, dynamic>;
+                    final userName = userData['name'];
+                    final userImage = userData['imageUrls'] != null &&
+                            userData['imageUrls'].isNotEmpty
+                        ? userData['imageUrls']
+                        : Icons.person;
+// Null-aware access to imageUrls
+                    print("userImage: $userImage");
+
+                    // Define function to fetch latest message
+                    Stream<QuerySnapshot> getLatestMessageStream(
+                        String currentUserId, String otherUserId) {
+                      List<String> ids = [currentUserId, otherUserId];
+                      ids.sort();
+                      String chatRoomId = ids.join('_');
+                      return FirebaseFirestore.instance
+                          .collection("chat_room")
+                          .doc(chatRoomId)
+                          .collection("messages")
+                          .orderBy("timestamp", descending: true)
+                          .limit(1)
+                          .snapshots();
                     }
 
-                    var message = messageDocs.first['message'];
-                    var type = messageDocs.first['type'];
-                    var sender = messageDocs.first['senderId'];
+                    // Fetch latest message
+                    var latestMessageStream =
+                        getLatestMessageStream(currentUserId!, userId);
+                    Stream<List<Map<String, dynamic>>> latestMessagesStream =
+                        Stream.periodic(Duration(seconds: 5))
+                            .asyncMap((_) async {
+                      List<Map<String, dynamic>> latestMessages = [];
 
-                    print("type, $type");
-                    print("message, $message");
-                    // Check conditions
-                    if (message == "" && type != 'image') {
-                      return SizedBox(); // Return SizedBox if message is null and type is not image
-                    } else if (message == "" &&
-                        type == 'image' &&
-                        sender == userId) {
-                      message =
-                          '$userName sent a photo'; // Set message to 'You sent a photo' if message is null and type is image
-                    } else if (message == "" &&
-                        type == 'image' &&
-                        sender != userId) {
-                      message = 'You sent a photo';
-                    }
-                    // print("type: $type");
+                      for (var userId in matchedUserIds.keys) {
+                        String user1 = matchedUserIds[userId]['user1'];
+                        String user2 = matchedUserIds[userId]['user2'];
 
-                    return ChatTile(
-                      name: userName,
-                      message: message,
-                      image: userImage,
-                      receiverEmail: userData['email'],
-                      receiverId: userId,
+                        List<String> ids = [user1, user2];
+                        ids.sort();
+                        String chatRoomId = ids.join('_');
+
+                        var querySnapshot = await FirebaseFirestore.instance
+                            .collection('chat_room')
+                            .doc(chatRoomId)
+                            .collection('messages')
+                            .orderBy('timestamp', descending: true)
+                            .limit(1)
+                            .get();
+
+                        if (querySnapshot.docs.isNotEmpty) {
+                          var latestMessageDoc = querySnapshot.docs.first;
+                          latestMessages.add({
+                            'userId': userId,
+                            'timestamp': latestMessageDoc['timestamp'],
+                            'message': latestMessageDoc['message']
+                          });
+                        }
+                      }
+
+                      // Sort latest messages based on timestamp
+                      latestMessages.sort((a, b) =>
+                          (b['timestamp'] as Timestamp)
+                              .compareTo(a['timestamp']));
+
+                      return latestMessages;
+                    });
+
+                    return StreamBuilder<QuerySnapshot>(
+                      stream: latestMessageStream,
+                      builder: (context, messageSnapshot) {
+                        if (messageSnapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return const CircularProgressIndicator(
+                            color: Color(0xFFBB254A),
+                          ); // Display loading indicator while waiting for message data
+                        }
+                        if (messageSnapshot.hasError) {
+                          return Text(
+                              'Error: ${messageSnapshot.error}'); // Display error message if there's an error
+                        }
+
+                        // Retrieve message
+                        var messageDocs = messageSnapshot.data!.docs;
+                        if (messageDocs.isEmpty) {
+                          return SizedBox(); // Return an empty SizedBox if there's no message
+                        }
+
+                        var message = messageDocs.first['message'];
+                        var type = messageDocs.first['type'];
+                        var sender = messageDocs.first['senderId'];
+                        var timestamp = messageDocs.first['timestamp'];
+
+                        print("type, $type");
+                        print("message, $message");
+                        // Check conditions
+                        if (message == "" && type != 'image') {
+                          return SizedBox(); // Return SizedBox if message is null and type is not image
+                        } else if (message == "" &&
+                            type == 'image' &&
+                            sender == userId) {
+                          message =
+                              '$userName sent a photo'; // Set message to 'You sent a photo' if message is null and type is image
+                        } else if (message == "" &&
+                            type == 'image' &&
+                            sender != userId) {
+                          message = 'You sent a photo';
+                        }
+                        print("timestamp");
+                        print("$timestamp");
+
+                        return ChatTile(
+                            name: userName,
+                            message: message,
+                            image: userImage,
+                            receiverEmail: userData['email'],
+                            receiverId: userId,
+                            timestamp: timestamp);
+                      },
                     );
                   },
                 );
+                // Fetch user data and build ChatTile widget here
               },
             );
           },
@@ -488,15 +610,6 @@ class _ChatScreenState extends State<ChatScreen> {
       },
     );
   }
-}
-
-Widget _buildMessageItem(DocumentSnapshot doc) {
-  final messageText =
-      doc['text']; // Assuming 'text' is the field in your message document
-  return ListTile(
-    title: Text(messageText),
-    // Customize the appearance of the message item as needed
-  );
 }
 
 Widget _buildChatUser(BuildContext context, String name, String imagePath,
@@ -544,6 +657,7 @@ class ChatTile extends StatefulWidget {
   final String message;
   final String receiverEmail;
   final String receiverId;
+  final Timestamp timestamp;
 
   const ChatTile({
     Key? key,
@@ -552,6 +666,7 @@ class ChatTile extends StatefulWidget {
     required this.message,
     required this.receiverEmail,
     required this.receiverId,
+    required this.timestamp,
   }) : super(key: key);
 
   @override
@@ -560,6 +675,7 @@ class ChatTile extends StatefulWidget {
 
 class _ChatTileState extends State<ChatTile> {
   late String _message;
+  late Timestamp _timestamp;
   late Timer _timer;
 
   @override
@@ -576,6 +692,8 @@ class _ChatTileState extends State<ChatTile> {
   void _loadLatestMessage() {
     // Assign the latest message text to the _message variable
     _message = widget.message;
+    _timestamp = widget.timestamp;
+
     setState(() {}); // Trigger a rebuild to update the message in the UI
   }
 
@@ -590,6 +708,11 @@ class _ChatTileState extends State<ChatTile> {
   Widget build(BuildContext context) {
     // print("widget.image: ${widget.image}");
     // print("widget.name: ${widget.name}");
+    // Format the timestamp
+    final Timestamp timestamp = _timestamp;
+    String date = DateFormat.yMMMEd().format(
+        timestamp.toDate()); // Use 'yMMMEd' for date with month name and year
+    String time = DateFormat.Hm().format(timestamp.toDate());
     return ListTile(
       leading: CircleAvatar(
         radius: 30.0,
@@ -601,11 +724,25 @@ class _ChatTileState extends State<ChatTile> {
           fontFamily: 'Sk-Modernist',
         ),
       ),
-      subtitle: Text(
-        _message,
-        style: TextStyle(
-          fontFamily: 'Sk-Modernist',
-        ),
+      subtitle: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            _message,
+            style: TextStyle(
+              fontFamily: 'Sk-Modernist',
+            ),
+          ),
+          Text(
+            // Assuming timestamp is of type Timestamp
+            time.toString(), // Convert timestamp to string
+            style: TextStyle(
+              fontFamily: 'Sk-Modernist',
+              fontSize: 12, // Adjust font size as needed
+              color: Colors.grey, // Optionally adjust color
+            ),
+          ),
+        ],
       ),
       onTap: () {
         Navigator.push(
